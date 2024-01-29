@@ -1,0 +1,12 @@
+# python -m pip install -r requirements.txt
+
+
+# FastAPI
+fastapi[all]
+
+# Tests
+pytest
+httpx
+
+# SQLAlchemy
+sqlalchemy
