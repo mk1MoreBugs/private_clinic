@@ -1,8 +1,10 @@
 from datetime import datetime
 
+from pydantic import BaseModel
+
 from app.schemas.full_name import FullName
 
 
-class Person(FullName):
-    patient_id: int
+class Patient(BaseModel):
+    full_name: FullName
     birthday: datetime
