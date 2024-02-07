@@ -1,4 +1,3 @@
-from datetime import date
 from typing import Optional
 
 from sqlalchemy.orm import Mapped
@@ -6,9 +5,6 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from database.models.patient import Patient
 from .base import Base
 
 

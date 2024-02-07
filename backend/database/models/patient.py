@@ -7,10 +7,6 @@ from sqlalchemy import String
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .visiting_session import VisitingSession
-    from .patient_category import PatientCategory
 from .base import Base
 
 

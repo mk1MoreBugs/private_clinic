@@ -6,11 +6,6 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .diagnosis import Diagnosis
-    from .doctor import Doctor
-    from .service import Service
 from .base import Base
 
 

@@ -2,9 +2,6 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .visit import Visit
 from .base import Base
 
 

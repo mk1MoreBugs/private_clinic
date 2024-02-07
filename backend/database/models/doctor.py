@@ -4,11 +4,6 @@ from sqlalchemy import String
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .doctor_category import Category
-    from .doctor_speciality import Speciality
-    from .visit import Visit
 from .base import Base
 
 

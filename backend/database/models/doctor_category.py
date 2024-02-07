@@ -4,9 +4,6 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy import Enum
 from sqlalchemy.orm import relationship
 
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from .doctor import Doctor
 from .base import Base
 
 
