@@ -14,23 +14,23 @@ class Visit(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    visiting_session_id: Mapped[Optional[int]] = mapped_column(
+    visiting_session_id: Mapped[int] = mapped_column(
         ForeignKey("visiting_sessions.id", onupdate="CASCADE", ondelete="SET NULL")
     )
 
-    doctor_id: Mapped[Optional[int]] = mapped_column(
+    doctor_id: Mapped[int] = mapped_column(
         ForeignKey("doctors.id", onupdate="CASCADE", ondelete="SET NULL")
     )
     service_id: Mapped[int] = mapped_column(
         ForeignKey("services.id", onupdate="CASCADE", ondelete="RESTRICT")
     )
-    diagnosis_id: Mapped[int] = mapped_column(
+    diagnosis_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey("diagnoses.id", onupdate="CASCADE", ondelete="RESTRICT")
     )
-    date: Mapped[datetime]
+    appointment_datetime: Mapped[datetime]
     discounted_price: Mapped[int]
-    anamnesis: Mapped[str]
-    opinion: Mapped[str]
+    anamnesis: Mapped[Optional[str]]
+    opinion: Mapped[Optional[str]]
 
     doctor: Mapped["Doctor"] = relationship(back_populates="visits")
     service: Mapped["Service"] = relationship(back_populates="visits")
@@ -43,8 +43,8 @@ class Visit(Base):
                 f"doctor_id={self.doctor_id!r}, "
                 f"service_id={self.service_id!r}, "
                 f"diagnosis_id={self.diagnosis_id!r}, "
-                f"date={self.date!r}, "
-                f"price={self.discounted_price!r}, "
+                f"appointment_datetime={self.appointment_datetime!r}, "
+                f"discounted_price={self.discounted_price!r}, "
                 f"anamnesis={self.anamnesis!r}, "
                 f"opinion={self.opinion!r})"
                 )
