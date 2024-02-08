@@ -15,7 +15,7 @@ class Doctor(Base):
     first_name: Mapped[str] = mapped_column(String(50))
     middle_name: Mapped[str] = mapped_column(String(50))
     experience: Mapped[int]
-    quit: Mapped[bool] = mapped_column(default=False)  # Уволен ли
+    quit_clinic: Mapped[bool] = mapped_column(default=False)  # Уволен ли
     speciality_id: Mapped[int] = mapped_column(ForeignKey("specialities.id"))
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))
 
@@ -30,7 +30,7 @@ class Doctor(Base):
                 f"first_name={self.first_name!r}, "
                 f"middle_name={self.middle_name!r}, "
                 f"experience={self.experience!r}, "
-                f"quit={self.quit!r}, "
+                f"quit_clinic={self.quit_clinic!r}, "
                 f"speciality_id={self.speciality_id!r}, "
                 f"category_id={self.category_id!r})"
                 )
