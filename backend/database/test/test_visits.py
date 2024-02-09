@@ -245,6 +245,27 @@ def test_update_appointment_datetime(db_session, visits, create_visits):
     assert results[0]["appointment_datetime"] == new_datetime
 
 
+def test_update_anamnesis_and_diagnosis_id_and_opinion(db_session, visits, create_visits):
+    results = read_visits(session=db_session, detailed_information=True)
+    print('\n', "results:", *results, sep='\n')
+
+    new_opinion = "baz bar"
+    new_anamnesis = "bar baz"
+    update_visit(
+        session=db_session,
+        visit_id=1,
+        opinion=new_opinion,
+        anamnesis=new_anamnesis,
+        diagnosis_id=1
+    )
+
+    results = read_visits(session=db_session, detailed_information=True)
+    print('\n', "results:", *results, sep='\n')
+    assert results[0]["opinion"] == new_opinion
+    assert results[0]["anamnesis"] == new_anamnesis
+    assert results[0]["diagnosis_name"] == "foo"
+
+
 def test_read_visits_quit_doctor(db_session, create_visits, visits):
     results = read_visits(session=db_session, visit_session_id=1)
     print('\n', "results:", *results, sep='\n')
