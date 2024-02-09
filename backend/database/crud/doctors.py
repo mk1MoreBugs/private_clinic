@@ -28,6 +28,7 @@ def create_doctor(
 
 def read_doctors(session: Session):
     stmt = select(
+        Doctor.id.label("doctor_id"),
         Doctor.last_name,
         Doctor.first_name,
         Doctor.middle_name,
