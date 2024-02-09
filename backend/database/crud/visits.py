@@ -1,15 +1,16 @@
 from datetime import datetime
 
 from sqlalchemy import select, and_
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 from sqlalchemy import update
 from sqlalchemy import delete
 
-from database import Visit, Doctor, DoctorSpeciality, DoctorCategory, Diagnosis, Service, Patient, PatientCategory, VisitingSession
+from database import Visit, Doctor, DoctorSpeciality, DoctorCategory, Diagnosis, Service, Patient, PatientCategory, \
+    VisitingSession
 
 
 def create_visit(
-        session: sessionmaker,
+        session: Session,
         visiting_session_id: int,
         service_id: int,
         doctor_id: int,
@@ -30,13 +31,12 @@ def create_visit(
         opinion=opinion,
     )
 
-    with session() as session:
-        session.add(visit)
-        session.commit()
+    session.add(visit)
+    session.commit()
 
 
 def read_visits(
-        session: sessionmaker,
+        session: Session,
         detailed_information: bool = False,
         visit_session_id: int | None = None,
         doctor_id: int | None = None,
@@ -121,19 +121,18 @@ def read_visits(
     ).join(
         Doctor, Doctor.id == Visit.doctor_id  # todo patient_id not None
     ).join(
-        DoctorSpeciality, DoctorSpeciality.id == Doctor.speciality_id # todo patient_id not None
+        DoctorSpeciality, DoctorSpeciality.id == Doctor.speciality_id  # todo patient_id not None
     ).join(
         DoctorCategory, DoctorCategory.id == Doctor.category_id  # todo patient_id not None
     ).order_by(
         Visit.appointment_datetime
     )
 
-    with session() as session:
-        return session.execute(stmt).mappings().all()  # todo return list[dict]
+    return session.execute(stmt).mappings().all()  # todo return list[dict]
 
 
 def read_visit_by_id(
-        session: sessionmaker,
+        session: Session,
         visit_id: int,
 ):
     stmt = select(
@@ -177,43 +176,41 @@ def read_visit_by_id(
         Visit.appointment_datetime
     )
 
-    with session() as session:
-        return session.execute(stmt).mappings().all()  # todo return list[dict]
+    return session.execute(stmt).mappings().all()  # todo return list[dict]
 
 
 def update_visit(
-        session: sessionmaker,
+        session: Session,
         visit_id: int,
         appointment_datetime: datetime | None = None,
         diagnosis_id: int | None = None,
         anamnesis: str | None = None,
         opinion: str | None = None,
 ):
-    with session() as session:
-        if diagnosis_id is not None:
-            stmt = update(Visit).where(Visit.id == visit_id).values(diagnosis_id=diagnosis_id)
-            session.execute(stmt)
+    if diagnosis_id is not None:
+        stmt = update(Visit).where(Visit.id == visit_id).values(diagnosis_id=diagnosis_id)
+        session.execute(stmt)
 
-        if anamnesis is not None:
-            stmt = update(Visit).where(Visit.id == visit_id).values(anamnesis=anamnesis)
-            session.execute(stmt)
+    if anamnesis is not None:
+        stmt = update(Visit).where(Visit.id == visit_id).values(anamnesis=anamnesis)
+        session.execute(stmt)
 
-        if opinion is not None:
-            stmt = update(Visit).where(Visit.id == visit_id).values(opinion=opinion)
-            session.execute(stmt)
+    if opinion is not None:
+        stmt = update(Visit).where(Visit.id == visit_id).values(opinion=opinion)
+        session.execute(stmt)
 
-        if appointment_datetime is not None:
-            stmt = update(Visit).where(Visit.id == visit_id).values(appointment_datetime=appointment_datetime)
-            session.execute(stmt)
+    if appointment_datetime is not None:
+        stmt = update(Visit).where(Visit.id == visit_id).values(appointment_datetime=appointment_datetime)
+        session.execute(stmt)
 
-        session.commit()
+    session.commit()
 
 
 def delete_visit(
-    session: sessionmaker,
-    visit_id: int,
+        session: Session,
+        visit_id: int,
 ):
     stmt = delete(Visit).where(Visit.id == visit_id)
-    with session() as session:
-        session.execute(stmt)
-        session.commit()
+
+    session.execute(stmt)
+    session.commit()
