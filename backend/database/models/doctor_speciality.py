@@ -5,7 +5,7 @@ from sqlalchemy.orm import relationship
 from .base import Base
 
 
-class Speciality(Base):
+class DoctorSpeciality(Base):
     __tablename__ = "specialities"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -14,7 +14,7 @@ class Speciality(Base):
     doctors: Mapped[list["Doctor"]] = relationship(back_populates="speciality")
 
     def __repr__(self) -> str:
-        return (f"Speciality("
+        return (f"DoctorSpeciality("
                 f"id={self.id!r}, "
                 f"name={self.name!r})"
                 )

@@ -19,8 +19,8 @@ class Doctor(Base):
     speciality_id: Mapped[int] = mapped_column(ForeignKey("specialities.id"))
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))
 
-    speciality: Mapped["Speciality"] = relationship(back_populates="doctors")
-    category: Mapped["Category"] = relationship(back_populates="doctors")
+    speciality: Mapped["DoctorSpeciality"] = relationship(back_populates="doctors")
+    category: Mapped["DoctorCategory"] = relationship(back_populates="doctors")
     visits: Mapped[list["Visit"]] = relationship(back_populates="doctor")
 
     def __repr__(self) -> str:

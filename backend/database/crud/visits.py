@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import update
 from sqlalchemy import delete
 
-from database import Visit, Doctor, Speciality, Category, Diagnosis, Service, Patient, PatientCategory, VisitingSession
+from database import Visit, Doctor, DoctorSpeciality, DoctorCategory, Diagnosis, Service, Patient, PatientCategory, VisitingSession
 
 
 def create_visit(
@@ -56,13 +56,13 @@ def read_visits(
                 Doctor.last_name.label("doctor_last_name"),
                 Doctor.first_name.label("doctor_first_name"),
                 Doctor.middle_name.label("doctor_middle_name"),
-                Category.name.label("category_name"),
-                Speciality.name.label("speciality_name"),
+                DoctorCategory.name.label("category_name"),
+                DoctorSpeciality.name.label("speciality_name"),
                 Patient.last_name.label("patient_last_name"),
                 Patient.first_name.label("patient_first_name"),
                 Patient.middle_name.label("patient_middle_name"),
-                Category.name.label("category_name"),
-                Speciality.name.label("speciality_name"),
+                DoctorCategory.name.label("category_name"),
+                DoctorSpeciality.name.label("speciality_name"),
             )
         )
 
@@ -85,8 +85,8 @@ def read_visits(
                 Doctor.last_name.label("doctor_last_name"),
                 Doctor.first_name.label("doctor_first_name"),
                 Doctor.middle_name.label("doctor_middle_name"),
-                Category.name.label("category_name"),
-                Speciality.name.label("speciality_name"),
+                DoctorCategory.name.label("category_name"),
+                DoctorSpeciality.name.label("speciality_name"),
             )
         )
         where_statement = (
@@ -121,9 +121,9 @@ def read_visits(
     ).join(
         Doctor, Doctor.id == Visit.doctor_id  # todo patient_id not None
     ).join(
-        Speciality, Speciality.id == Doctor.speciality_id # todo patient_id not None
+        DoctorSpeciality, DoctorSpeciality.id == Doctor.speciality_id # todo patient_id not None
     ).join(
-        Category, Category.id == Doctor.category_id  # todo patient_id not None
+        DoctorCategory, DoctorCategory.id == Doctor.category_id  # todo patient_id not None
     ).order_by(
         Visit.appointment_datetime
     )
@@ -149,8 +149,8 @@ def read_visit_by_id(
         Doctor.last_name.label("doctor_last_name"),
         Doctor.first_name.label("doctor_first_name"),
         Doctor.middle_name.label("doctor_middle_name"),
-        Category.name.label("category_name"),
-        Speciality.name.label("speciality_name"),
+        DoctorCategory.name.label("category_name"),
+        DoctorSpeciality.name.label("speciality_name"),
 
         Diagnosis.name.label("diagnosis_name"),
         Visit.anamnesis,
@@ -170,9 +170,9 @@ def read_visit_by_id(
     ).join(
         Doctor, Doctor.id == Visit.doctor_id  # todo patient_id not None
     ).join(
-        Speciality, Speciality.id == Doctor.speciality_id  # todo patient_id not None
+        DoctorSpeciality, DoctorSpeciality.id == Doctor.speciality_id  # todo patient_id not None
     ).join(
-        Category, Category.id == Doctor.category_id  # todo patient_id not None
+        DoctorCategory, DoctorCategory.id == Doctor.category_id  # todo patient_id not None
     ).order_by(
         Visit.appointment_datetime
     )

@@ -36,7 +36,7 @@ def read_patients(session: sessionmaker):
             Patient.first_name,
             Patient.middle_name,
             Patient.birthday,
-            PatientCategory.category.label("category_name"),
+            PatientCategory.name.label("category_name"),
             PatientCategory.id.label("category_id")
         ).select_from(
             Patient,

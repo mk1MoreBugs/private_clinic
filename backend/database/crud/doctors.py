@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import update
 
-from database import Doctor, Speciality, Category
+from database import Doctor, DoctorSpeciality, DoctorCategory
 
 
 def create_doctor(
@@ -35,14 +35,14 @@ def read_doctors(session: sessionmaker):
             Doctor.middle_name,
             Doctor.experience,
             Doctor.quit_clinic,
-            Speciality.name.label("speciality_name"),
-            Category.name.label("category_name"),
+            DoctorSpeciality.name.label("speciality_name"),
+            DoctorCategory.name.label("category_name"),
         ).select_from(
             Doctor,
         ).join(
-            Speciality, isouter=True,
+            DoctorSpeciality, isouter=True,
         ).join(
-            Category, isouter=True,
+            DoctorCategory, isouter=True,
         )
 
         return session.execute(stmt).mappings().all()  # return list[dict]

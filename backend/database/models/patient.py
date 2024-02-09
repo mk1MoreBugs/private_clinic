@@ -20,7 +20,7 @@ class Patient(Base):
     birthday: Mapped[date]
     category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("patient_categories.id"))
 
-    category: Mapped["PatientCategory"] = relationship("PatientCategory", back_populates="patients")
+    category: Mapped["PatientCategory"] = relationship(back_populates="patients")
     visiting_sessions: Mapped[list["VisitingSession"]] = relationship(back_populates="patient")
 
     def __repr__(self) -> str:

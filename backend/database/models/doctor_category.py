@@ -13,7 +13,7 @@ class CategoryEnum(enum.StrEnum):
     highest = "Высшая категория"
 
 
-class Category(Base):
+class DoctorCategory(Base):
     __tablename__ = "categories"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -22,7 +22,7 @@ class Category(Base):
     doctors: Mapped[list["Doctor"]] = relationship(back_populates="category")
 
     def __repr__(self) -> str:
-        return (f"Category("
+        return (f"DoctorCategory("
                 f"id={self.id!r}, "
                 f"name={self.name!r})"
                 )

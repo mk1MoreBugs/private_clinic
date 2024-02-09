@@ -7,7 +7,7 @@ from ..models.patient_category import PatientCategory
 def create_patient_category(session: sessionmaker, category, discount_percentage):
     with session() as session:
         patient_category = PatientCategory(
-            category=category,
+            name=category,
             discount_percentage=discount_percentage,
         )
         session.add(patient_category)
