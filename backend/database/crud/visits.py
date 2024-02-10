@@ -61,8 +61,6 @@ def read_visits(
                 Patient.last_name.label("patient_last_name"),
                 Patient.first_name.label("patient_first_name"),
                 Patient.middle_name.label("patient_middle_name"),
-                DoctorCategory.name.label("category_name"),
-                DoctorSpeciality.name.label("speciality_name"),
             )
         )
 
