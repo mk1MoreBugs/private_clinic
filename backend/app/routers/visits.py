@@ -3,9 +3,8 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status, Path
 
 from app.dependencies import session_db
-from app.schemas.patient import PatientIn
 from app.schemas.visit import VisitById, UpdateVisit, VisitIn
-from database.crud import patients
+from database.crud import patients_categories
 from database.crud import visits
 
 router = APIRouter(
@@ -28,7 +27,14 @@ async def create_visit(
         visit: VisitIn,
         session: Session = Depends(session_db),
 ):
-    visits.create_visit(session=session, **dict(visit))
+    discount_percentage = patients_categories.read_patient_categories_by_visiting_session_id(
+        session,
+        visiting_session_id=visit.visiting_session_id,
+    )
+    visit = dict(visit)
+    visit = visit["discounted_price"] * (1 - discount_percentage/100)
+
+    visits.create_visit(session=session, **visit)
 
 
 @router.put("/update/{visit_id}")
