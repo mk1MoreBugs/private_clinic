@@ -13,9 +13,9 @@ def client():
     client.close()
 
     try:
-        remove("./database.db")
+        remove("./sqlite.db")
     except FileNotFoundError:
         try:
-            remove("./app./test/database.db")
+            remove("./app./test/sqlite.db")
         except FileNotFoundError:
             print("File DB Not Found")
