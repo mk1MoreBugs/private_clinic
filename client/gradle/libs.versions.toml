@@ -1,0 +1,20 @@
+[versions]
+ktor = "2.3.8"
+coroutines = "1.7.3"
+kotlinVersion = "1.9.22"
+kvisionVersion = "7.3.1"
+
+[libraries]
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kvision= { module = "io.kvision:kvision", version.ref = "kvisionVersion" }
+kvision-bootstrap = { module = "io.kvision:kvision-bootstrap", version.ref = "kvisionVersion" }
+kvision-i18n = { module = "io.kvision:kvision-i18n", version.ref = "kvisionVersion" }
+kvision-routing-navigo-ng = { module = "io.kvision:kvision-routing-navigo-ng", version.ref = "kvisionVersion" }
+kvision-testutils = { module = "io.kvision:kvision-testutils", version.ref = "kvisionVersion" }
+
+[plugins]
+kvision = { id = "io.kvision", version.ref = "kvisionVersion"}
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlinVersion" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
