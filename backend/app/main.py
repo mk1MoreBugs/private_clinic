@@ -34,7 +34,7 @@ async def get_diagnoses(
     return list_diagnoses
 
 
-@app.get("/clinic_services")
+@app.get("/clinic-services")
 async def get_diagnoses(
          session: Session = Depends(session_db),
 ) -> list[ClinicService]:
@@ -43,7 +43,7 @@ async def get_diagnoses(
     return list_clinic_services
 
 
-@app.get("/patient_categories")
+@app.get("/patient-categories")
 async def get_diagnoses(
          session: Session = Depends(session_db),
 ) -> list[PatientCategory]:
@@ -52,7 +52,7 @@ async def get_diagnoses(
     return list_patient_categories
 
 
-@app.get("/doctor_categories")
+@app.get("/doctor-categories")
 async def get_doctor_categories(
          session: Session = Depends(session_db),
 ) -> list[BaseItem]:
@@ -61,7 +61,7 @@ async def get_doctor_categories(
     return list_doctor_categories
 
 
-@app.get("/doctor_specialities")
+@app.get("/doctor-specialities")
 async def get_doctor_categories(
          session: Session = Depends(session_db),
 ) -> list[BaseItem]:
