@@ -1,4 +1,5 @@
 package mk1morebugs.data.ktorClient
 
-object Routers {
+private object Routers {
+    private val host: String = "http://localhost:8080"
 }
