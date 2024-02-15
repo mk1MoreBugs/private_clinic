@@ -5,7 +5,7 @@ from app.main import app
 CONFIG = uvicorn.Config(
         app,
         host="localhost",
-        port=8000,
+        port=8080,
         log_level="debug",
     )
 
