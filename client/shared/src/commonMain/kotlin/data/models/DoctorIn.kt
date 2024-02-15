@@ -5,19 +5,20 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class UserIn(
-    @SerialName("patient_id")
-    val patientId: Int,
+data class DoctorIn(
+    @SerialName("doctor_id")
+    val doctorId: Int,
     @SerialName("last_name")
     val lastName: String,
     @SerialName("first_name")
     val firstName: String,
     @SerialName("middle_name")
     val middleName: String?=null,
-    @SerialName("birthday")
-    val birthday: String,
+    val experience: Int,
+    @SerialName("quit_clinic")
+    val quitClinic: Boolean=false, //todo исправить true на false на backend
     @SerialName("category_name")
     val categoryName: String,
-    @SerialName("category_id")
-    val categoryId: Int,
+    @SerialName("speciality_name")
+    val specialityName: String,
 )

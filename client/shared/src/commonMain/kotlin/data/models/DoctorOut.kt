@@ -5,19 +5,16 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class UserIn(
-    @SerialName("patient_id")
-    val patientId: Int,
+data class DoctorOut(
     @SerialName("last_name")
     val lastName: String,
     @SerialName("first_name")
     val firstName: String,
     @SerialName("middle_name")
     val middleName: String?=null,
-    @SerialName("birthday")
-    val birthday: String,
-    @SerialName("category_name")
-    val categoryName: String,
+    val experience: Int,
+    @SerialName("speciality_id")
+    val specialityId: Int,
     @SerialName("category_id")
     val categoryId: Int,
 )
