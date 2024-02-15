@@ -14,8 +14,10 @@ data class VisitOut(
     val visitingSessionId: Int,
     @SerialName("service_id")
     val serviceId: Int,
+    @SerialName("doctor_id")
+    val doctorId: Int,
     @SerialName("diagnosis_id")
-    val diagnosisId: Int,
-    val anamnesis: String,
-    val opinion: String,
+    val diagnosisId: Int?,
+    val anamnesis: String?,
+    val opinion: String?,
 )

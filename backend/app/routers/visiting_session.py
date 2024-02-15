@@ -29,7 +29,7 @@ async def read_visits(
 
 
 @router.post("/create", status_code=status.HTTP_201_CREATED)
-async def read_visiting_session_by_patient_id(
+async def create_visiting_session_by_patient_id(
         patient_id: Annotated[int, Body()],
         session: Session = Depends(session_db),
 ):

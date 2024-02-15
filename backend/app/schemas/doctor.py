@@ -14,7 +14,7 @@ class DoctorIn(BaseDoctor):
 
 
 class DoctorOut(BaseDoctor):
-    quit_clinic: bool | None
+    quit_clinic: bool = False
     doctor_id: int | None
     speciality_name: str | None
     category_name: str | None
