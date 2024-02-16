@@ -2,11 +2,10 @@ package mk1morebugs.data.models
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlin.js.Date
 
 
 @Serializable
-data class UserOut(
+data class PatientOut(
     @SerialName("last_name")
     val lastName: String,
     @SerialName("first_name")

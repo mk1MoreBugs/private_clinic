@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 
 @Serializable
-data class UserIn(
+data class PatientIn(
     @SerialName("patient_id")
     val patientId: Int,
     @SerialName("last_name")

@@ -1,6 +1,6 @@
 package data.models
 
-import mk1morebugs.data.models.UserIn
+import mk1morebugs.data.models.PatientIn
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -10,8 +10,8 @@ class TestUserIn {
     )
     @Test
     fun deserializeJSON() {
-        val obj = kotlinx.serialization.json.Json.decodeFromString<UserIn>(responseJSON[0])
-        val expected = UserIn(
+        val obj = kotlinx.serialization.json.Json.decodeFromString<PatientIn>(responseJSON[0])
+        val expected = PatientIn(
             patientId = 0,
             lastName = "Иванов",
             firstName = "Иван",
