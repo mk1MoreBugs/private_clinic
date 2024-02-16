@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.dependencies import session_db
 from app.routers import visits, doctors, patients, visiting_session
@@ -18,6 +19,20 @@ app.include_router(visits.router)
 app.include_router(doctors.router)
 app.include_router(patients.router)
 app.include_router(visiting_session.router)
+
+origins = [
+    "http://localhost",
+    "http://localhost:8000",
+    "https://localhost:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
