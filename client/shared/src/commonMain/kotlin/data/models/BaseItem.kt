@@ -1,4 +1,4 @@
-package mk1morebugs.data.models
+package data.models
 
 import kotlinx.serialization.Serializable
 

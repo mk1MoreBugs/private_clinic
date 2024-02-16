@@ -1,6 +1,6 @@
-package mk1morebugs.data
+package data
 
-import mk1morebugs.data.models.*
+import data.models.*
 
 interface Repository {
     suspend fun readVisitByVisitId(visitId: Int): List<VisitDetailed>

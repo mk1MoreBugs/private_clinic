@@ -1,10 +1,10 @@
-package mk1morebugs.data.ktorClient
+package data.ktorClient
 
 import io.ktor.client.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.serialization.kotlinx.json.*
-import mk1morebugs.data.Repository
-import mk1morebugs.data.models.*
+import data.Repository
+import data.models.*
 
 
 class RequestResponse : Repository {

@@ -1,4 +1,4 @@
-package mk1morebugs.data.models
+package data.models
 
 data class ClinicService(
     val id: Int,

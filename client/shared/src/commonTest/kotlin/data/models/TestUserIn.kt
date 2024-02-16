@@ -1,6 +1,5 @@
 package data.models
 
-import mk1morebugs.data.models.PatientIn
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
