@@ -1,14 +1,20 @@
 package mk1morebugs
 
+import data.Repository
+import data.ktorClient.RequestResponse
 import io.kvision.*
 import io.kvision.core.*
-import io.kvision.html.*
-import io.kvision.panel.*
-import io.kvision.routing.Routing.Companion.init
+import io.kvision.html.button
+import io.kvision.html.span
+import io.kvision.panel.hPanel
+import io.kvision.panel.root
+import io.kvision.panel.vPanel
 import io.kvision.theme.Theme
 import io.kvision.theme.ThemeManager
 import io.kvision.utils.pt
 
+
+class Data(data: Repository = RequestResponse())
 class App : Application() {
     init {
         ThemeManager.init(initialTheme = Theme.DARK, remember = false)
@@ -29,7 +35,23 @@ class App : Application() {
                 background = Background(color = Color.name(Col.RED))
 
                 span("Hello world")
-                button("click me!")
+                button("click me!").also {
+                    onClickLaunch {
+                        val list_obj = RequestResponse().readDoctorCategories()
+
+                        for (item in list_obj) {
+                            console.log("clk!")
+                            console.log(item.name)
+
+                            span(item.id.toString())
+                            span(item.name)
+                        }
+
+
+
+
+                    }
+                }
             }
             vPanel {
                 alignItems = AlignItems.END

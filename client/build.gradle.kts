@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.kvision)
 }
 
@@ -18,6 +19,10 @@ kotlin {
         browser {
             webpackTask {
                 mainOutputFileName = "main.bundle.js"
+            }
+
+            testTask {
+                enabled = false
             }
         }
         binaries.executable()
@@ -38,6 +43,17 @@ kotlin {
         jsTest.dependencies {
             implementation(kotlin("test-js"))
             implementation(libs.kvision.testutils)
+        }
+
+        commonMain.dependencies {
+            implementation(libs.ktor.client.core)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.ktor.client.content.negotiation)
+        }
+
+        commonTest.dependencies {
+            implementation(kotlin("test")) // Brings all the platform dependencies automatically
         }
     }
 }

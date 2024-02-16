@@ -1,10 +1,15 @@
 package data.ktorClient
 
-import io.ktor.client.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
 import data.Repository
 import data.models.*
+import io.ktor.client.*
+import io.ktor.client.call.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.*
+import mk1morebugs.data.ktorClient.Routers
 
 
 class RequestResponse : Repository {
@@ -15,7 +20,14 @@ class RequestResponse : Repository {
     }
 
     override suspend fun readVisitByVisitId(visitId: Int): List<VisitDetailed> {
-        TODO("Not yet implemented")
+        val response: HttpResponse = client.get {
+            url {
+                host = Routers.host
+                path("/visits/".plus(visitId.toString()))
+            }
+        }
+        console.log(response.status.toString())
+        return response.body()
     }
 
     override suspend fun createVisit(visit: VisitOut) {
@@ -75,7 +87,14 @@ class RequestResponse : Repository {
     }
 
     override suspend fun readDoctorCategories(): List<BaseItem> {
-        TODO("Not yet implemented")
+        val response: HttpResponse = client.get {
+            url {
+                host = Routers.host
+                path("/doctor-categories/")
+            }
+        }
+        console.log(response.status.toString())
+        return response.body()
     }
 
     override suspend fun readDoctorSpecialities(): List<BaseItem> {
