@@ -1,41 +1,76 @@
 package data
 
+import data.ktorClient.RequestResponse
 import data.models.*
+import io.ktor.client.call.*
+import mk1morebugs.data.ktorClient.Routers
 
-interface Repository {
-    suspend fun readVisitByVisitId(visitId: Int): List<VisitDetailed>
+class Repository : IRepository {
+    override suspend fun readVisitByVisitId(visitId: Int): List<VisitDetailed> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun createVisit(visit: VisitOut)
+    override suspend fun createVisit(visit: VisitOut) {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun updateVisit(updateVisit: VisitUpdate)
+    override suspend fun updateVisit(updateVisit: VisitUpdate) {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun deleteVisit(visitId: Int)
+    override suspend fun deleteVisit(visitId: Int) {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun readDoctors(): List<DoctorIn>
+    override suspend fun readDoctors(): List<DoctorIn> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun createDoctor(doctor: DoctorOut)
+    override suspend fun createDoctor(doctor: DoctorOut) {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun readVisitsByDoctorId(doctorId: Int): List<DoctorVisitIn>
+    override suspend fun readVisitsByDoctorId(doctorId: Int): List<DoctorVisitIn> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun readPatients(): List<PatientIn>
+    override suspend fun readPatients(): List<PatientIn> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun createPatient(patient: PatientOut)
+    override suspend fun createPatient(patient: PatientOut) {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun readVisitingSessionsByPatientId(patientId: Int): List<VisitingSession>
+    override suspend fun readVisitingSessionsByPatientId(patientId: Int): List<VisitingSession> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun readVisits(sessionId: Int): List<PatientVisitIn>
+    override suspend fun readVisits(sessionId: Int): List<PatientVisitIn> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun createVisitingSessionByPatientId(patientId: Int)
+    override suspend fun createVisitingSessionByPatientId(patientId: Int) {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun readDiagnoses(): List<BaseItem>
+    override suspend fun readDiagnoses(): List<BaseItem> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun readClinicServices():List<ClinicService>
+    override suspend fun readClinicServices(): List<ClinicService> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun readPatientCategories(): List<PatientCategory>
+    override suspend fun readPatientCategories(): List<PatientCategory> {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun readDoctorCategories(): List<BaseItem>
+    override suspend fun readDoctorCategories(): List<BaseItem> =
+        RequestResponse().getRequest(Routers.DOCTOR_CATEGORIES.url).body()
 
-    suspend fun readDoctorSpecialities(): List<BaseItem>
 
-
+    override suspend fun readDoctorSpecialities(): List<BaseItem> {
+        TODO("Not yet implemented")
+    }
 }
