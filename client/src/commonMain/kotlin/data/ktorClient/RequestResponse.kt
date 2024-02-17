@@ -7,7 +7,6 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
-import mk1morebugs.data.ktorClient.Routers
 
 
 class RequestResponse {
@@ -77,12 +76,14 @@ class RequestResponse {
     }
 
 
-    suspend fun putRequest(url: String): HttpResponse {
+    suspend fun putRequest(url: String, data: Any): HttpResponse {
         val response: HttpResponse = client.put {
             url {
                 host = Routers.HOST.url
                 path(url)
             }
+            contentType(ContentType.Application.Json)
+            setBody(data)
         }
 
         console.log(response.status.toString())
