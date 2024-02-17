@@ -5,27 +5,27 @@ import data.models.*
 interface IRepository {
     suspend fun readVisitByVisitId(visitId: Int): List<VisitDetailed>
 
-    suspend fun createVisit(visit: VisitOut)
+    suspend fun createVisit(visit: VisitOut): Int
 
-    suspend fun updateVisit(updateVisit: VisitUpdate)
+    suspend fun updateVisit(visitId: String, updateVisit: VisitUpdate): Int
 
-    suspend fun deleteVisit(visitId: Int)
+    suspend fun deleteVisit(visitId: Int): Int
 
     suspend fun readDoctors(): List<DoctorIn>
 
-    suspend fun createDoctor(doctor: DoctorOut)
+    suspend fun createDoctor(doctor: DoctorOut): Int
 
     suspend fun readVisitsByDoctorId(doctorId: Int): List<DoctorVisitIn>
 
     suspend fun readPatients(): List<PatientIn>
 
-    suspend fun createPatient(patient: PatientOut)
+    suspend fun createPatient(patient: PatientOut): Int
 
     suspend fun readVisitingSessionsByPatientId(patientId: Int): List<VisitingSession>
 
     suspend fun readVisits(sessionId: Int): List<PatientVisitIn>
 
-    suspend fun createVisitingSessionByPatientId(patientId: Int)
+    suspend fun createVisitingSessionByPatientId(patientId: Int): Int
 
     suspend fun readDiagnoses(): List<BaseItem>
 
