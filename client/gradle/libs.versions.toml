@@ -15,6 +15,11 @@ kvision-bootstrap = { module = "io.kvision:kvision-bootstrap", version.ref = "kv
 kvision-i18n = { module = "io.kvision:kvision-i18n", version.ref = "kvisionVersion" }
 kvision-routing-navigo-ng = { module = "io.kvision:kvision-routing-navigo-ng", version.ref = "kvisionVersion" }
 kvision-testutils = { module = "io.kvision:kvision-testutils", version.ref = "kvisionVersion" }
+kvision-bootstrap-icons = { module = "io.kvision:kvision-bootstrap-icons", version.ref = "kvisionVersion" }
+kvision-datetime = { module = "io.kvision:kvision-datetime", version.ref = "kvisionVersion" }
+kvision-state = { module = "io.kvision:kvision-state", version.ref = "kvisionVersion" }
+kvision-state-flow = { module = "io.kvision:kvision-state-flow", version.ref = "kvisionVersion" }
+
 
 [plugins]
 kvision = { id = "io.kvision", version.ref = "kvisionVersion"}

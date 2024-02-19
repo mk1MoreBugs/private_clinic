@@ -35,6 +35,12 @@ kotlin {
             implementation(libs.kvision.bootstrap)
             implementation(libs.kvision.i18n)
             implementation(libs.kvision.routing.navigo.ng)
+
+            implementation(libs.kvision.bootstrap.icons)
+            implementation(libs.kvision.datetime)
+            implementation(libs.kvision.state)
+            implementation(libs.kvision.state.flow)
+
             implementation(npm("css-loader", "6.10.0"))
 
             implementation(libs.ktor.client.js)
