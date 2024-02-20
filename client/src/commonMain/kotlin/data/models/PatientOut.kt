@@ -15,5 +15,5 @@ data class PatientOut(
     @SerialName("birthday")
     val birthday: String,
     @SerialName("category_id")
-    val categoryId: Int,
+    val categoryId: Int? = null,
 )

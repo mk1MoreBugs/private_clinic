@@ -13,11 +13,11 @@ data class PatientIn(
     @SerialName("first_name")
     val firstName: String,
     @SerialName("middle_name")
-    val middleName: String?=null,
+    val middleName: String? = null,
     @SerialName("birthday")
     val birthday: String,
     @SerialName("category_name")
-    val categoryName: String,
+    val categoryName: String?,
     @SerialName("category_id")
-    val categoryId: Int,
+    val categoryId: Int?,
 )
