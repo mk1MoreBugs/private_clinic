@@ -41,7 +41,6 @@ class RequestResponse {
         }
 
         console.log(response.status.toString())
-        client.close()
         return response
     }
 
@@ -57,7 +56,6 @@ class RequestResponse {
         }
 
         console.log(response.status.toString())
-        client.close()
         return response
     }
 
@@ -71,7 +69,6 @@ class RequestResponse {
         }
 
         console.log(response.status.toString())
-        client.close()
         return response
     }
 
@@ -87,7 +84,6 @@ class RequestResponse {
         }
 
         console.log(response.status.toString())
-        client.close()
         return response
     }
 }
