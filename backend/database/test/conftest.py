@@ -123,6 +123,13 @@ def patients():
             "birthday": date.fromisoformat("1995-12-10"),
             "category_name": "bar",
         },
+        {
+            "last_name": "Иванов3",
+            "first_name": "Иван3",
+            "middle_name": None,
+            "birthday": date.fromisoformat("1995-12-10"),
+            "category_name": "bar",
+        },
     ]
 
 

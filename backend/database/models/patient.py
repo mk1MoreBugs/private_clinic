@@ -16,7 +16,7 @@ class Patient(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     last_name: Mapped[str] = mapped_column(String(50))
     first_name: Mapped[str] = mapped_column(String(50))
-    middle_name: Mapped[str] = mapped_column(String(50))
+    middle_name: Mapped[Optional[str]] = mapped_column(String(50))
     birthday: Mapped[date]
     category_id: Mapped[Optional[int]] = mapped_column(ForeignKey("patient_categories.id"))
 

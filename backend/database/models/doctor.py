@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy import String
@@ -13,7 +15,7 @@ class Doctor(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     last_name: Mapped[str] = mapped_column(String(50))
     first_name: Mapped[str] = mapped_column(String(50))
-    middle_name: Mapped[str] = mapped_column(String(50))
+    middle_name: Mapped[Optional[str]] = mapped_column(String(50))
     experience: Mapped[int]
     quit_clinic: Mapped[bool] = mapped_column(default=False)  # Уволен ли
     speciality_id: Mapped[int] = mapped_column(ForeignKey("specialities.id"))

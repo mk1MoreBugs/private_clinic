@@ -11,8 +11,8 @@ def create_patient(
         session: Session,
         last_name: str,
         first_name: str,
-        middle_name: str,
         birthday: date,
+        middle_name: str | None = None,
         category_id: int | None = None,
 ):
     patient = Patient(

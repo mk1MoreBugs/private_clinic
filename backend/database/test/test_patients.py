@@ -24,6 +24,14 @@ def test_read_patients(db_session, patients):
         birthday=patients[1]["birthday"],
         category_id=1,
     )
+    create_patient(
+        session=db_session,
+        last_name=patients[2]["last_name"],
+        first_name=patients[2]["first_name"],
+        middle_name=patients[2]["middle_name"],
+        birthday=patients[2]["birthday"],
+        category_id=None,
+    )
 
     result = read_patients(session=db_session)
 

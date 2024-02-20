@@ -9,10 +9,10 @@ def create_doctor(
         session: Session,
         last_name: str,
         first_name: str,
-        middle_name: str,
         experience: int,
         speciality_id: int,
         category_id: int,
+        middle_name: str | None = None,
 ):
     doctor = Doctor(
         last_name=last_name,
