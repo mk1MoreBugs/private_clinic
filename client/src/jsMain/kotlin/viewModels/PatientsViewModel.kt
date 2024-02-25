@@ -1,4 +1,4 @@
-package mk1morebugs
+package mk1morebugs.viewModels
 
 import data.IRepository
 import data.Repository
