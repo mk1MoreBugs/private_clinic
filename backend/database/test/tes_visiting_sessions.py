@@ -4,7 +4,17 @@ from database.crud.visiting_sessions import create_visiting_session, read_visiti
 from database.crud.visits import create_visit
 
 
-def test_create_visiting_session_by_patient_id(db_session, visits):
+def test_read_visiting_session_when_visits_not_exist(db_session):
+    patient_id = 1
+    create_visiting_session(db_session, patient_id=patient_id)
+
+    result = read_visiting_session(db_session, patient_id=patient_id)
+    print("\n", "patient_id:", patient_id, "result:", result, "\n")
+
+    assert result[0]["session_id"] == 1
+
+
+def test_read_visiting_session_when_visits_is_exist(db_session, visits):
     create_visiting_session(db_session, patient_id=1)
     create_visiting_session(db_session, patient_id=1)
     create_visiting_session(db_session, patient_id=2)

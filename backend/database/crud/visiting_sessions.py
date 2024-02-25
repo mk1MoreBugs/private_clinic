@@ -19,8 +19,10 @@ def read_visiting_session(session: Session, patient_id):
         func.min(Visit.appointment_datetime).label("date_start"),
         func.max(Visit.appointment_datetime).label("date_end"),
         func.sum(Visit.discounted_price).label("sum_price"),
-    ).join(
+    ).select_from(
         VisitingSession
+    ).join(
+        Visit, isouter=True
     ).where(
         VisitingSession.patient_id == patient_id,
     ).group_by(
