@@ -1,6 +1,5 @@
 package mk1morebugs
 
-import data.ktorClient.Routers
 import io.kvision.*
 import io.kvision.html.*
 import io.kvision.navbar.nav
@@ -15,7 +14,7 @@ import io.kvision.utils.pt
 import mk1morebugs.layouts.doctors
 import mk1morebugs.layouts.patients
 import mk1morebugs.layouts.sessions
-import mk1morebugs.layouts.visits
+import mk1morebugs.layouts.patientVisits
 
 
 class App : Application() {
@@ -51,10 +50,10 @@ class App : Application() {
                 marginLeft = 10.perc
 
                 when (appState.value.views) {
-                    Routers.PATIENTS -> patients()
-                    Routers.DOCTORS -> doctors()
-                    Routers.SESSION -> sessions()
-                    Routers.VISITS -> visits()
+                    Views.PATIENTS -> patients()
+                    Views.DOCTORS -> doctors()
+                    Views.SESSION -> sessions()
+                    Views.VISITS -> patientVisits()
                     else -> {
                         span("Страница не найдена!")
                     }

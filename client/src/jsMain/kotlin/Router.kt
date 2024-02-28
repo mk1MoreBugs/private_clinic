@@ -7,6 +7,15 @@ import kotlinx.coroutines.flow.update
 import kotlin.js.RegExp
 
 
+enum class Views {
+    DOCTORS,
+    PATIENTS,
+    SESSION,
+    VISITS,
+    VISIT
+}
+
+
 class Router(root: String) {
     private val router = Routing.init(root)
 
@@ -19,14 +28,17 @@ class Router(root: String) {
             console.log("route: /doctors")
             appState.update {
                 it.copy(
-                    views = Routers.DOCTORS
+                    views = Views.DOCTORS,
+                    patientId = null,
+                    sessionId = null,
+                    visitId = null,
                 )
             }
         }).on(Routers.PATIENTS.url, {
             console.log("route: /patients")
             appState.update {
                 it.copy(
-                    views = Routers.PATIENTS
+                    views = Views.PATIENTS
                 )
             }
         }).on(getStringRegExp(Routers.PATIENTS.url), { match ->
@@ -34,7 +46,7 @@ class Router(root: String) {
                 it.copy(
                     patientId = match.data[0].toString().toInt(),
                     doctorId = null,
-                    views = Routers.SESSION
+                    views = Views.SESSION
                 )
             }
             console.log("statePatientId", appState.value.patientId)
@@ -45,13 +57,19 @@ class Router(root: String) {
                     sessionId = match.data[0].toString().toInt(),
                     patientId = null,
                     doctorId = null,
-                    views = Routers.VISITS
+                    views = Views.VISITS
                 )
             }
             console.log("stateSessionId", appState.value.sessionId)
 
-        }).on(getStringRegExp(Routers.VISITS.url), {
-            console.log("route: /visits/visitsId")
+        }).on(getStringRegExp(Routers.VISITS.url), { match ->
+            appState.update {
+                it.copy(
+                    visitId = match.data[0].toString().toInt(),
+                    views = Views.VISIT
+                )
+            }
+            console.log("stateVisitsId: ", appState.value.visitId)
         })
     }
 
