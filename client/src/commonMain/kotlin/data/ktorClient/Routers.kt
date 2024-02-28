@@ -11,7 +11,4 @@ enum class Routers(val url: String) {
     PATIENT_CATEGORIES("/patient-categories/"),
     DOCTOR_CATEGORIES("/doctor-categories/"),
     DOCTOR_SPECIALITIES("/doctor-specialities/"),
-
-
-
 }
