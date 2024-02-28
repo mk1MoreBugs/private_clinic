@@ -1,5 +1,8 @@
 package data.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ClinicService(
     val id: Int,
     val name: String,
