@@ -16,7 +16,7 @@ data class DoctorIn(
     val middleName: String?=null,
     val experience: Int,
     @SerialName("quit_clinic")
-    val quitClinic: Boolean=false, //todo исправить true на false на backend
+    val quitClinic: Boolean=false,
     @SerialName("category_name")
     val categoryName: String,
     @SerialName("speciality_name")
