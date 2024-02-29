@@ -144,6 +144,7 @@ def read_visit_by_id(
         Doctor.last_name.label("doctor_last_name"),
         Doctor.first_name.label("doctor_first_name"),
         Doctor.middle_name.label("doctor_middle_name"),
+        Doctor.experience.label("doctor_experience"),
         DoctorCategory.name.label("category_name"),
         DoctorSpeciality.name.label("speciality_name"),
 

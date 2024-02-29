@@ -43,6 +43,7 @@ class VisitById(VisitSelectForDoctor, VisitSelectForPatient):
     diagnosis_name: str | None
     anamnesis: str | None
     opinion: str | None
+    doctor_experience: int
 
 
 class UpdateVisit(BaseModel):

@@ -20,6 +20,8 @@ data class VisitDetailed(
     val doctorFirstName: String,
     @SerialName("doctor_middle_name")
     val doctorMiddleName: String?=null,
+    @SerialName("doctor_experience")
+    val doctorExperience: Int,
     @SerialName("category_name")
     val categoryName: String,
     @SerialName("speciality_name")
@@ -35,4 +37,4 @@ data class VisitDetailed(
     val anamnesis: String?,
     val opinion: String?,
 
-)
+    )
