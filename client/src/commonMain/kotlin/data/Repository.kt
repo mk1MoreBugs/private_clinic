@@ -8,7 +8,7 @@ import data.ktorClient.Routers
 class Repository : IRepository {
     private val request = RequestResponse()
     override suspend fun readVisitByVisitId(visitId: Int): List<VisitDetailed> = request.getRequest(
-        url = Routers.SESSION.url.plus(visitId)
+        url = Routers.VISITS.url.plus(visitId)
     ).body()
 
 
@@ -18,7 +18,7 @@ class Repository : IRepository {
     ).status.value
 
 
-    override suspend fun updateVisit(visitId: String, updateVisit: VisitUpdate): Int = request.putRequest(
+    override suspend fun updateVisit(visitId: Int, updateVisit: VisitUpdate): Int = request.putRequest(
         url = Routers.VISITS.url.plus("update/").plus(visitId),
         data = updateVisit
     ).status.value

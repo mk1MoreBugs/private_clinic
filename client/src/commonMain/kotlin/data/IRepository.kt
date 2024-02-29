@@ -7,7 +7,7 @@ interface IRepository {
 
     suspend fun createVisit(visit: VisitOut): Int
 
-    suspend fun updateVisit(visitId: String, updateVisit: VisitUpdate): Int
+    suspend fun updateVisit(visitId: Int, updateVisit: VisitUpdate): Int
 
     suspend fun deleteVisit(visitId: Int): Int
 
