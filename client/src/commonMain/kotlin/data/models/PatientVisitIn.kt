@@ -12,6 +12,8 @@ data class PatientVisitIn(
     val appointmentDatetime: String,  // example: 2019-08-24T14:15:22Z
     @SerialName("discounted_price")
     val discountedPrice: Int,
+    @SerialName("discount_percentage")
+    val discountPercentage: Int?,
     @SerialName("service_name")
     val serviceName: String,
     @SerialName("doctor_last_name")

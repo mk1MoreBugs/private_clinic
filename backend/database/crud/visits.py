@@ -46,6 +46,7 @@ def read_visits(
         Visit.appointment_datetime,
         Visit.discounted_price,
         Service.name.label("service_name"),
+        PatientCategory.discount_percentage,
 
     ]
 
@@ -111,6 +112,8 @@ def read_visits(
         VisitingSession, VisitingSession.id == Visit.visiting_session_id  # todo patient_id not None
     ).join(
         Patient, Patient.id == VisitingSession.patient_id  # todo doctor_id not None
+    ).join(
+        PatientCategory, PatientCategory.id == Patient.category_id, isouter=True
     ).join(
         Doctor, Doctor.id == Visit.doctor_id  # todo patient_id not None
     ).join(

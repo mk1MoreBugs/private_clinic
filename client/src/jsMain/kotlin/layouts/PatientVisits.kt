@@ -41,8 +41,8 @@ fun SimplePanel.patientVisits() {
 
 private fun VPanel.gridVisits(uiState: StateFlow<PatientVisitsData>) {
     gridPanel(
-        columnGap = uiState.value.visits.size + 1,
-        rowGap = 6,
+        columnGap = 30,
+        rowGap = 20,
         justifyItems = JustifyItems.CENTER,
         useWrappers = true,
         alignItems = AlignItems.CENTER,
@@ -52,37 +52,57 @@ private fun VPanel.gridVisits(uiState: StateFlow<PatientVisitsData>) {
             options(1, 1) {
                 div {
                     span("id")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(2, 1) {
                 div {
                     span("Дата")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(3, 1) {
                 div {
                     span("Время")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(4, 1) {
                 div {
-                    span("Сумма")
-                    marginBottom = 20.pt
+                    span("Сумма, ₽")
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(5, 1) {
                 div {
-                    span("Услуга")
-                    marginBottom = 20.pt
+                    span("процент скидки, %")
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(6, 1) {
                 div {
+                    span("Услуга")
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
+                }
+            }
+            options(7, 1) {
+                div {
                     span("Доктор")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
         }
@@ -92,10 +112,7 @@ private fun VPanel.gridVisits(uiState: StateFlow<PatientVisitsData>) {
                 link(
                     label = item.visitId.toString(),
                     url = "#/".plus(Routers.VISITS.url).plus(item.visitId),
-                ) {
-                    marginTop = 15.pt
-                    marginBottom = 15.pt
-                }
+                )
             }
             options(2, index + 2) {
                 span(item.appointmentDatetime.slice(0..9))
@@ -107,9 +124,12 @@ private fun VPanel.gridVisits(uiState: StateFlow<PatientVisitsData>) {
                 span(item.discountedPrice.toString())
             }
             options(5, index + 2) {
-                span(item.serviceName)
+                span((item.discountPercentage ?: 0).toString())
             }
             options(6, index + 2) {
+                span(item.serviceName)
+            }
+            options(7, index + 2) {
                 hPanel {
                     span(
                         "${item.doctorLastName} " +

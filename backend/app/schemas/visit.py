@@ -21,6 +21,7 @@ class VisitIn(BaseVisit):
 class VisitBaseSelect(BaseVisit):
     visit_id: int
     service_name: str
+    discount_percentage: Annotated[int, Field(ge=0, le=100)] | None
 
 
 class VisitSelectForDoctor(VisitBaseSelect):
