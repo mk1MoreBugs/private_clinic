@@ -266,18 +266,6 @@ def test_update_anamnesis_and_diagnosis_id_and_opinion(db_session, visits, creat
     assert results[0]["diagnosis_name"] == "foo"
 
 
-def test_read_visits_quit_doctor(db_session, create_visits, visits):
-    results = read_visits(session=db_session, visit_session_id=1)
-    print('\n', "results:", *results, sep='\n')
-
-    quit_doctor(db_session, 1)
-
-    quit_results = read_visits(session=db_session, visit_session_id=1, doctor_quit_clinic=True)
-    print('\n', "results:", *quit_results, sep='\n')
-
-    assert len(results) - len(quit_results) == 1
-
-
 def test_delete_visit(db_session, create_visits):
     old_results = read_visits(session=db_session, visit_session_id=1)
     print('\n', "results:", *old_results, sep='\n')

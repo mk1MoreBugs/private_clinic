@@ -23,13 +23,11 @@ async def read_doctors(session: Session = Depends(session_db)) -> list[DoctorOut
 @router.get("/{doctor_id}")
 async def read_visits_by_doctor_id(
         doctor_id: int,
-        quit_clinic=False,
         session: Session = Depends(session_db),
 ) -> list[VisitSelectForDoctor]:
     visits_by_doctor_id: list[VisitSelectForDoctor] = visits.read_visits(
         session=session,
         doctor_id=doctor_id,
-        doctor_quit_clinic=quit_clinic,
     )
     return visits_by_doctor_id
 

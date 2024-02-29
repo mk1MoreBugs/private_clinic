@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import select, and_
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 from sqlalchemy import update
 from sqlalchemy import delete
@@ -40,7 +40,6 @@ def read_visits(
         detailed_information: bool = False,
         visit_session_id: int | None = None,
         doctor_id: int | None = None,
-        doctor_quit_clinic: bool = False,
 ):
     select_statement = [
         Visit.id.label("visit_id"),
@@ -64,7 +63,7 @@ def read_visits(
             )
         )
 
-        where_statement = Doctor.quit_clinic == doctor_quit_clinic,
+        where_statement = True,
 
     elif doctor_id is not None:
         select_statement.extend(
@@ -87,12 +86,8 @@ def read_visits(
                 DoctorSpeciality.name.label("speciality_name"),
             )
         )
-        where_statement = (
-            and_(
-                VisitingSession.id == visit_session_id,
-                Doctor.quit_clinic == doctor_quit_clinic,
-            )
-        )
+        where_statement = VisitingSession.id == visit_session_id,
+
     if detailed_information:
         select_statement.extend(
             (
@@ -126,7 +121,7 @@ def read_visits(
         Visit.appointment_datetime
     )
 
-    return session.execute(stmt).mappings().all()  # todo return list[dict]
+    return session.execute(stmt).mappings().all()  # return list[dict]
 
 
 def read_visit_by_id(
