@@ -38,13 +38,11 @@ class VisitSelectForPatient(VisitBaseSelect):
     speciality_name: str
 
 
-class VisitSelectDoctorAndPatient(VisitSelectForDoctor, VisitSelectForPatient):
-    pass
-
-
-class VisitById(VisitSelectDoctorAndPatient):
+class VisitById(VisitSelectForDoctor, VisitSelectForPatient):
     patient_birthday: date
-    diagnosis_name: str
+    diagnosis_name: str | None
+    anamnesis: str | None
+    opinion: str | None
 
 
 class UpdateVisit(BaseModel):

@@ -31,6 +31,8 @@ data class VisitDetailed(
     @SerialName("patient_middle_name")
     val patientMiddleName: String?=null,
     @SerialName("diagnosis_name")
-    val diagnosisName: String,
+    val diagnosisName: String?,
+    val anamnesis: String?,
+    val opinion: String?,
 
 )
