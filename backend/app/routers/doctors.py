@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, status
 
 from app.dependencies import session_db
-from app.routers import visits as path_visits
 from app.schemas.doctor import DoctorIn, DoctorOut
 from app.schemas.visit import VisitSelectForDoctor
 from database.crud import doctors
