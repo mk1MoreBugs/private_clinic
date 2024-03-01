@@ -265,8 +265,8 @@ private fun VPanel.createVisit(uiState: StateFlow<PatientVisitsData>, viewModel:
                 formPanel.validate()
                 try {
                     val appointmentDatetime: String =
-                        formPanel.getData().appointmentDate?.toISOString()?.slice(0..9)?.plus(
-                            formPanel.getData().appointmentTime?.toISOString()?.slice(10..15)
+                        formPanel.getData().appointmentDate?.toISOString()?.slice(0..10)?.plus(
+                            formPanel.getData().appointmentTime?.toLocaleTimeString()
                         ) ?: throw IllegalArgumentException("поля \"Дата\" и \"Время\" обязательны")
 
                     val price = formPanel.getData().discountedPrice?.toInt()
