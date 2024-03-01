@@ -252,7 +252,7 @@ private fun VPanel.createVisit(uiState: StateFlow<PatientVisitsData>, viewModel:
         }
 
 
-        modal.size = ModalSize.XLARGE
+        modal.size = ModalSize.LARGE
         modal.add(
             formPanel
         )
