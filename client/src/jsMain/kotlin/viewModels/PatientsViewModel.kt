@@ -56,5 +56,6 @@ class PatientsViewModel(private val repository: IRepository = Repository()) {
     suspend fun createPatient(patient: PatientOut) {
         console.log("create...")
         repository.createPatient(patient)
+        getData()
     }
 }

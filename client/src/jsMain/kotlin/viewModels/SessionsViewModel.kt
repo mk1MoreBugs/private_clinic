@@ -50,5 +50,6 @@ class SessionsViewModel(private val repository: IRepository = Repository()) {
     suspend fun createSession(patientId: Int) {
         console.log("create session")
         repository.createVisitingSessionByPatientId(patientId)
+        getData()
     }
 }

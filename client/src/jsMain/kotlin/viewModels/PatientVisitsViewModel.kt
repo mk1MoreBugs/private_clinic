@@ -66,5 +66,6 @@ class PatientVisitsViewModel(private val repository: IRepository = Repository())
     suspend fun createVisit(visitOut: VisitOut) {
         console.log("create session")
         repository.createVisit(visitOut)
+        getData()
     }
 }

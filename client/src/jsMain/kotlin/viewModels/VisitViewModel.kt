@@ -61,11 +61,13 @@ class VisitViewModel(private val repository: IRepository = Repository()) {
     suspend fun updateVisit(visitId: Int, update: VisitUpdate) {
         console.log("update...")
         repository.updateVisit(visitId, update)
+        getData()
     }
 
 
     suspend fun deleteVisit(visitId: Int) {
         console.log("delete...")
         repository.deleteVisit(visitId)
+        getData()
     }
 }
