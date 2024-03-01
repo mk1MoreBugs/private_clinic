@@ -135,6 +135,8 @@ def read_visit_by_id(
         Visit.id.label("visit_id"),
         Visit.appointment_datetime,
         Service.name.label("service_name"),
+        Visit.discounted_price,
+        PatientCategory.discount_percentage,
 
         Patient.last_name.label("patient_last_name"),
         Patient.first_name.label("patient_first_name"),
@@ -163,6 +165,8 @@ def read_visit_by_id(
         VisitingSession, VisitingSession.id == Visit.visiting_session_id  # todo patient_id not None
     ).join(
         Patient, Patient.id == VisitingSession.patient_id  # todo doctor_id not None
+    ).join(
+        PatientCategory, PatientCategory.id == Patient.category_id, isouter=True
     ).join(
         Doctor, Doctor.id == Visit.doctor_id  # todo patient_id not None
     ).join(

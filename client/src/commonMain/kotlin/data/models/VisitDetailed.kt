@@ -14,6 +14,8 @@ data class VisitDetailed(
     val visitId: Int,
     @SerialName("service_name")
     val serviceName: String,
+    @SerialName("discount_percentage")
+    val discountPercentage: Int?,
     @SerialName("doctor_last_name")
     val doctorLastName: String,
     @SerialName("doctor_first_name")
@@ -32,9 +34,10 @@ data class VisitDetailed(
     val patientFirstName: String,
     @SerialName("patient_middle_name")
     val patientMiddleName: String?=null,
+    @SerialName("patient_birthday")
+    val patientBirthday: String,  // example: 2019-08-24
     @SerialName("diagnosis_name")
     val diagnosisName: String?,
     val anamnesis: String?,
     val opinion: String?,
-
     )
