@@ -3,7 +3,10 @@ package mk1morebugs.layouts
 import data.ktorClient.Routers
 import data.models.VisitingSession
 import io.ktor.client.plugins.*
-import io.kvision.core.*
+import io.kvision.core.AlignItems
+import io.kvision.core.BsColor
+import io.kvision.core.JustifyItems
+import io.kvision.core.onClickLaunch
 import io.kvision.html.button
 import io.kvision.html.div
 import io.kvision.html.span
@@ -36,8 +39,8 @@ fun SimplePanel.sessions() {
 
 private fun VPanel.gridSessions(uiState: StateFlow<SessionsData>) {
     gridPanel(
-        columnGap = uiState.value.sessions.size + 1,
-        rowGap = 4,
+        columnGap = 30,
+        rowGap = 20,
         justifyItems = JustifyItems.CENTER,
         useWrappers = true,
         alignItems = AlignItems.CENTER,
@@ -47,30 +50,32 @@ private fun VPanel.gridSessions(uiState: StateFlow<SessionsData>) {
             options(1, 1) {
                 div {
                     span("Начало")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(2, 1) {
                 div {
                     span("Конец")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(3, 1) {
                 div {
                     span("Сумма")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
         }
 
         for ((index: Int, item: VisitingSession) in uiState.value.sessions.withIndex()) {
             options(1, index + 2) {
-                div {
-                    span(item.dateTimeStart ?: "Записей ещё нет")
-                    marginTop = 15.pt
-                    marginBottom = 15.pt
-                }
+                span(item.dateTimeStart ?: "Записей ещё нет")
             }
             options(2, index + 2) {
                 span(item.dateTimeEnd)
@@ -81,8 +86,6 @@ private fun VPanel.gridSessions(uiState: StateFlow<SessionsData>) {
 
             options(4, index + 2) {
                 div {
-                    paddingTop = 5.pt
-                    paddingBottom = 5.pt
                     button(
                         text = "Посмотреть посещения",
                         icon = "bi bi-clock-history",
@@ -101,7 +104,7 @@ private fun VPanel.createSession(viewModel: SessionsViewModel) {
     button(
         text = "Добавить сессию"
     ) {
-        marginTop = 10.pt
+        marginTop = 30.pt
         marginLeft = 30.perc
         marginRight = 30.perc
 

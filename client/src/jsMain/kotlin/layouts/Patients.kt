@@ -41,8 +41,8 @@ fun SimplePanel.patients() {
 
 private fun VPanel.gridPatients(uiState: StateFlow<PatientsData>) {
     gridPanel(
-        columnGap = uiState.value.patients.size + 1,
-        rowGap = 7,
+        columnGap = 30,
+        rowGap = 20,
         justifyItems = JustifyItems.CENTER,
         useWrappers = true,
         alignItems = AlignItems.CENTER,
@@ -52,42 +52,48 @@ private fun VPanel.gridPatients(uiState: StateFlow<PatientsData>) {
             options(1, 1) {
                 div {
                     span("Фамилия")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(2, 1) {
                 div {
                     span("Имя")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(3, 1) {
                 div {
                     span("Отчество")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(4, 1) {
                 div {
                     span("Дата рождения")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
             options(5, 1) {
                 div {
                     span("Категория пациента")
-                    marginBottom = 20.pt
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
                 }
             }
         }
 
         for ((index: Int, item: PatientIn) in uiState.value.patients.withIndex()) {
             options(1, index + 2) {
-                div {
-                    span(item.lastName)
-                    marginTop = 15.pt
-                    marginBottom = 15.pt
-                }
+                span(item.lastName)
             }
             options(2, index + 2) {
                 span(item.firstName)
@@ -103,8 +109,6 @@ private fun VPanel.gridPatients(uiState: StateFlow<PatientsData>) {
             }
             options(6, index + 2) {
                 div {
-                    paddingTop = 5.pt
-                    paddingBottom = 5.pt
                     button(
                         text = "Посмотреть сессии обращений",
                         icon = "bi bi-clock-history",
@@ -133,7 +137,7 @@ private fun VPanel.createPatient(uiState: StateFlow<PatientsData>, viewModel: Pa
     button(
         text = "Добавить пациента"
     ) {
-        marginTop = 10.pt
+        marginTop = 30.pt
         marginLeft = 30.perc
         marginRight = 30.perc
         icon = "bi bi-person-plus-fill"

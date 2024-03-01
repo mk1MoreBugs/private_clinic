@@ -169,7 +169,7 @@ private fun VPanel.createVisit(uiState: StateFlow<PatientVisitsData>, viewModel:
     button(
         text = "Добавить посещение"
     ) {
-        marginTop = 10.pt
+        marginTop = 30.pt
         marginLeft = 30.perc
         marginRight = 30.perc
         icon = "bi bi-plus-square"
