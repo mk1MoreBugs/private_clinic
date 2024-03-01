@@ -1,11 +1,12 @@
 package mk1morebugs
 
 import io.kvision.*
-import io.kvision.html.*
+import io.kvision.html.div
+import io.kvision.html.span
 import io.kvision.navbar.nav
 import io.kvision.navbar.navLink
 import io.kvision.navbar.navbar
-import io.kvision.panel.*
+import io.kvision.panel.root
 import io.kvision.state.bind
 import io.kvision.theme.Theme
 import io.kvision.theme.ThemeManager
@@ -52,7 +53,7 @@ class App : Application() {
                     Views.SESSION -> sessions()
                     Views.VISITS -> patientVisits()
                     Views.VISIT -> visit()
-                    else -> {
+                    Views.NOT_FOUND -> {
                         span("Страница не найдена!")
                     }
                 }
