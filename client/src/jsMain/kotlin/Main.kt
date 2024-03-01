@@ -11,10 +11,7 @@ import io.kvision.theme.Theme
 import io.kvision.theme.ThemeManager
 import io.kvision.utils.perc
 import io.kvision.utils.pt
-import mk1morebugs.layouts.doctors
-import mk1morebugs.layouts.patients
-import mk1morebugs.layouts.sessions
-import mk1morebugs.layouts.patientVisits
+import mk1morebugs.layouts.*
 
 
 class App : Application() {
@@ -54,6 +51,7 @@ class App : Application() {
                     Views.DOCTORS -> doctors()
                     Views.SESSION -> sessions()
                     Views.VISITS -> patientVisits()
+                    Views.VISIT -> visit()
                     else -> {
                         span("Страница не найдена!")
                     }
