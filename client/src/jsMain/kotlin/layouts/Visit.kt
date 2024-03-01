@@ -19,7 +19,8 @@ fun SimplePanel.visit() {
             val visit = uiState.value.visit[0]
 
             hPanel {
-                h1(visit.visitId.toString())
+                marginBottom = 20.pt
+                h1("Visit id: ${visit.visitId}")
                 button(
                     text = "Удалить запись",
                     style = ButtonStyle.DANGER
@@ -33,72 +34,116 @@ fun SimplePanel.visit() {
             }
 
             hPanel {
-                span("Название услуги:")
+                marginBottom = 10.pt
+                span("Название услуги:") {
+                    marginRight = 20.pt
+                }
                 span(visit.serviceName)
             }
 
             hPanel {
-                span("Цена с учетом скидки:")
+                marginBottom = 10.pt
+                span("Цена с учетом скидки:") {
+                    marginRight = 20.pt
+                }
                 span(visit.discountedPrice.toString())
             }
 
             hPanel {
-                span("Размер скидки:")
+                marginBottom = 10.pt
+                span("Размер скидки:") {
+                    marginRight = 20.pt
+                }
                 span(visit.discountPercentage.toString().plus(" %"))
             }
 
             hPanel {
+                marginBottom = 30.pt
                 span("Дата и время:") {
-                    paddingRight = 10.pt
+                    marginRight = 20.pt
                 }
                 span(visit.appointmentDatetime.slice(0..9)) {
-                    paddingRight = 5.pt
+                    marginRight = 5.pt
                 }
                 span(visit.appointmentDatetime.slice(11..15))
             }
 
-            h2("Пациент")
+            h2("Пациент") {
+                marginBottom = 10.pt
+            }
             hPanel {
-                span("ФИО:")
+                marginBottom = 10.pt
+                span("ФИО:") {
+                    marginRight = 20.pt
+                }
                 span("${visit.patientLastName} ${visit.patientFirstName} ${visit.patientMiddleName ?: ""}")
             }
 
             hPanel {
-                span("Дата рождения")
+                marginBottom = 30.pt
+                span("Дата рождения") {
+                    marginRight = 20.pt
+                }
                 span(visit.patientBirthday)
             }
 
-            h2("Доктор")
+            h2("Доктор") {
+                marginBottom = 10.pt
+            }
             hPanel {
-                span("ФИО:")
+                marginBottom = 10.pt
+                span("ФИО:") {
+                    marginRight = 20.pt
+                }
                 span("${visit.doctorLastName} ${visit.doctorFirstName} ${visit.doctorMiddleName ?: ""}")
             }
 
             hPanel {
-                span("Опыт работы:")
+                marginBottom = 10.pt
+                span("Опыт работы:") {
+                    marginRight = 20.pt
+                }
                 span(visit.doctorExperience.toString() + " лет")
             }
 
             hPanel {
-                span("Категория:")
+                marginBottom = 10.pt
+                span("Категория:") {
+                    marginRight = 20.pt
+                }
                 span(visit.categoryName)
             }
 
             hPanel {
-                span("Специальность:")
+                marginBottom = 30.pt
+                span("Специальность:") {
+                    marginRight = 20.pt
+                }
                 span(visit.specialityName)
             }
 
-            h2("Диагноз")
+            h2("Диагноз") {
+                marginBottom = 10.pt
+            }
             hPanel {
-                span("Название:")
+                marginBottom = 10.pt
+                span("Название:") {
+                    marginRight = 20.pt
+                }
                 span(visit.diagnosisName ?: "Диагноз не определен")
             }
 
-            span("Анамнез:")
+            span("Анамнез:") {
+                marginBottom = 2.pt
+                fontSize = 17.pt
+            }
             span(visit.anamnesis ?: "Нет данных")
 
-            span("Заключение:")
+            span("Заключение:") {
+                marginTop = 10.pt
+                marginBottom = 2.pt
+                fontSize = 17.pt
+            }
             span(visit.opinion ?: "Нет данных")
 
         } else {
