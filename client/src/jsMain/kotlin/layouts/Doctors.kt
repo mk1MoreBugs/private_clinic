@@ -201,7 +201,7 @@ private fun VPanel.createDoctor(uiState: StateFlow<DoctorsData>, viewModel: Doct
                 ),
                 required = true,
                 requiredMessage = requiredMessage,
-                validatorMessage = { "Сумма должна быть целым числом от 0 до 100" }
+                validatorMessage = { "Опыт работы должен быть целым числом от 0 до 100" }
             ) {
                 it.getValue()?.let { inputPrice ->
                     "^\\d..$".toRegex().matches(inputPrice)
@@ -240,7 +240,7 @@ private fun VPanel.createDoctor(uiState: StateFlow<DoctorsData>, viewModel: Doct
                     val experience = formPanel.getData().experience?.toInt()
                         ?: throw IllegalArgumentException("поле \"Опыт работы\" обязательно")
                     if (experience < 0 || experience > 100 ) {
-                        throw IllegalArgumentException("Сумма должна быть целым числом от 0 до 100")
+                        throw IllegalArgumentException("Опыт работы должен быть целым числом от 0 до 100")
                     }
 
                     viewModel.createDoctor(
