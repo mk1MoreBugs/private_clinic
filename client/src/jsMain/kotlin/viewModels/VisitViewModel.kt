@@ -2,6 +2,7 @@ package mk1morebugs.viewModels
 
 import data.IRepository
 import data.Repository
+import data.models.BaseItem
 import data.models.VisitDetailed
 import data.models.VisitUpdate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +17,7 @@ import mk1morebugs.appState
 data class VisitData(
     val fetchData: Boolean = false,
     val visit: List<VisitDetailed> = listOf(),
+    val diagnoses: List<BaseItem> = listOf(),
     val errMessage: String? = null,
 )
 
@@ -43,6 +45,7 @@ class VisitViewModel(private val repository: IRepository = Repository()) {
             _uiState.update {
                 it.copy(
                     visit = repository.readVisitByVisitId(appState.value.visitId!!),
+                    diagnoses = repository.readDiagnoses(),
                     fetchData = false,
                 )
             }

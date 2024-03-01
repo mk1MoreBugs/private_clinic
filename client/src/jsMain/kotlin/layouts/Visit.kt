@@ -1,14 +1,32 @@
 package mk1morebugs.layouts
 
+import data.models.VisitUpdate
+import io.ktor.client.plugins.*
+import io.kvision.core.BsBgColor
+import io.kvision.core.BsColor
 import io.kvision.core.onClickLaunch
+import io.kvision.form.formPanel
+import io.kvision.form.select.Select
+import io.kvision.form.text.TextArea
+import io.kvision.form.time.DateTime
 import io.kvision.html.*
+import io.kvision.modal.Modal
+import io.kvision.modal.ModalSize
 import io.kvision.panel.SimplePanel
 import io.kvision.panel.hPanel
 import io.kvision.panel.vPanel
 import io.kvision.state.bind
+import io.kvision.toast.ToastContainer
+import io.kvision.toast.ToastContainerPosition
 import io.kvision.utils.pt
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import mk1morebugs.appState
+import mk1morebugs.viewModels.VisitData
 import mk1morebugs.viewModels.VisitViewModel
+import kotlin.js.Date
+
 
 fun SimplePanel.visit() {
     val viewModel = VisitViewModel()
@@ -21,11 +39,15 @@ fun SimplePanel.visit() {
             hPanel {
                 marginBottom = 20.pt
                 h1("Visit id: ${visit.visitId}")
+
+                updateVisit(uiState, viewModel)
+
                 button(
                     text = "Удалить запись",
                     style = ButtonStyle.DANGER
                 ) {
-                    marginLeft = 30.pt
+                    size = ButtonSize.SMALL
+                    marginLeft = 60.pt
                 }.onClickLaunch {
                     if (appState.value.visitId != null) {
                         viewModel.deleteVisit(appState.value.visitId!!)
@@ -151,3 +173,135 @@ fun SimplePanel.visit() {
         }
     }
 }
+
+
+private fun SimplePanel.updateVisit(uiState: StateFlow<VisitData>, viewModel: VisitViewModel) {
+    @Serializable
+    data class VisitForm(
+        @Contextual val appointmentDate: Date? = null,
+        @Contextual val appointmentTime: Date? = null,
+        val diagnosisId: String? = null,
+        val anamnesis: String? = null,
+        val opinion: String? = null,
+    )
+
+    button(
+        text = "Обновить данные",
+        style = ButtonStyle.OUTLINESECONDARY,
+    ) {
+        size = ButtonSize.SMALL
+        marginLeft = 30.pt
+
+    }.onClick {
+        val modal = Modal("Обновление данных")
+
+        val formPanel = formPanel<VisitForm> {
+            add(
+                VisitForm::appointmentDate,
+                DateTime(format = "YYYY-MM-DD", label = "Дата посещения"),
+            )
+            add(
+                VisitForm::appointmentTime,
+                DateTime(format = "HH:mm", label = "Время посещения"),
+            )
+            add(
+                VisitForm::diagnosisId,
+                Select(
+                    options = uiState.value.diagnoses.map { it.id.toString() to it.name },
+                    label = "Диагноз"
+                ),
+                required = false,
+            )
+            add(
+                VisitForm::anamnesis,
+                TextArea(
+                    label = "Анамнез",
+                    rows = 30,
+                ),
+                required = false,
+            )
+            add(
+                VisitForm::opinion,
+                TextArea(
+                    label = "Заключение",
+                    rows = 30,
+                ),
+                required = false,
+            )
+        }
+
+        modal.size = ModalSize.XLARGE
+        modal.add(
+            formPanel
+        )
+
+        modal.addButton(Button("Добавить запись") {
+            onClickLaunch {
+                console.log("adding...")
+
+                formPanel.validate()
+                try {
+                    val appointmentDatetime: String? = if (
+                        formPanel.getData().appointmentDate != null
+                        && formPanel.getData().appointmentTime == null
+                    ) {
+                        formPanel.getData().appointmentDate?.toISOString()?.slice(0..9).plus(
+                            uiState.value.visit[0].appointmentDatetime.slice(10..15)
+                        )
+                    } else if (
+                        formPanel.getData().appointmentDate == null
+                        && formPanel.getData().appointmentTime != null
+                    ) {
+                        uiState.value.visit[0].appointmentDatetime.slice(0..10).plus(
+                            formPanel.getData().appointmentTime?.toLocaleTimeString()
+                        )
+                    } else if (
+                        formPanel.getData().appointmentDate != null
+                        && formPanel.getData().appointmentTime != null
+                    ) {
+                        formPanel.getData().appointmentDate?.toISOString()?.slice(0..10).plus(
+                            formPanel.getData().appointmentTime?.toLocaleTimeString()
+                        )
+                    } else {
+                        null
+                    }
+
+                    if (appState.value.visitId != null) {
+                        viewModel.updateVisit(
+                            visitId = appState.value.visitId!!,
+                            update = VisitUpdate(
+                                appointmentDatetime = appointmentDatetime,
+                                diagnosisId = formPanel.getData().diagnosisId?.toInt(),
+                                anamnesis = formPanel.getData().anamnesis,
+                                opinion = formPanel.getData().opinion,
+                            )
+                        )
+                    }
+
+                    modal.hide()
+
+                } catch (e: IllegalArgumentException) {
+                    ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
+                        message = "Не удалось создать запись, ${e.message}",
+                        bgColor = BsBgColor.DANGER,
+                        color = BsColor.DANGERBG,
+                    )
+                } catch (e: ResponseException) {
+                    ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
+                        message = "Не удалось создать запись, ${e.message}",
+                        color = BsColor.DANGER,
+                    )
+                }
+            }
+        })
+
+        modal.addButton(Button("Закрыть") {
+            onClick {
+                modal.hide()
+                console.log("modal close")
+            }
+        })
+        modal.show()
+    }
+}
+
