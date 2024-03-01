@@ -1,6 +1,7 @@
 package mk1morebugs.layouts
 
 import data.ktorClient.Routers
+import data.models.DoctorVisitIn
 import data.models.PatientVisitIn
 import data.models.VisitOut
 import io.ktor.client.plugins.*
@@ -23,23 +24,23 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import mk1morebugs.appState
-import mk1morebugs.viewModels.PatientVisitsData
-import mk1morebugs.viewModels.PatientVisitsViewModel
+import mk1morebugs.viewModels.VisitsData
+import mk1morebugs.viewModels.VisitsViewModel
 import kotlin.js.Date
 
 
 fun SimplePanel.patientVisits() {
-    val viewModel = PatientVisitsViewModel()
+    val viewModel = VisitsViewModel()
     val uiState = viewModel.uiState
 
     vPanel {
-        gridVisits(uiState)
+        gridVisitsHead(uiState)
         createVisit(uiState, viewModel)
     }
 }
 
 
-private fun VPanel.gridVisits(uiState: StateFlow<PatientVisitsData>) {
+private fun VPanel.gridVisitsHead(uiState: StateFlow<VisitsData>) {
     gridPanel(
         columnGap = 30,
         rowGap = 20,
@@ -47,8 +48,7 @@ private fun VPanel.gridVisits(uiState: StateFlow<PatientVisitsData>) {
         useWrappers = true,
         alignItems = AlignItems.CENTER,
     ).bind(uiState) {
-
-        if (uiState.value.visits.isNotEmpty()) {
+        if (uiState.value.patientVisits.isNotEmpty() || uiState.value.doctorVisits.isNotEmpty()) {
             options(1, 1) {
                 div {
                     span("id")
@@ -99,59 +99,106 @@ private fun VPanel.gridVisits(uiState: StateFlow<PatientVisitsData>) {
             }
             options(7, 1) {
                 div {
-                    span("Доктор")
+                    span().apply {
+                        if (uiState.value.patientVisits.isNotEmpty()) {
+                            content = "Доктор"
+                        } else if (uiState.value.doctorVisits.isNotEmpty()) {
+                            content = "Пациент"
+                        }
+                    }
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
                 }
             }
+
+            if (uiState.value.patientVisits.isNotEmpty()) {
+                gridPatientVisits(uiState.value.patientVisits)
+            } else if (uiState.value.doctorVisits.isNotEmpty()) {
+                gridDoctorVisits(uiState.value.doctorVisits)
+            }
         }
-
-        for ((index: Int, item: PatientVisitIn) in uiState.value.visits.withIndex()) {
-            options(1, index + 2) {
-                link(
-                    label = item.visitId.toString(),
-                    url = "#/".plus(Routers.VISITS.url).plus(item.visitId),
-                )
-            }
-            options(2, index + 2) {
-                span(item.appointmentDatetime.slice(0..9))
-            }
-            options(3, index + 2) {
-                span(item.appointmentDatetime.slice(11..15))
-            }
-            options(4, index + 2) {
-                span(item.discountedPrice.toString())
-            }
-            options(5, index + 2) {
-                span((item.discountPercentage ?: 0).toString())
-            }
-            options(6, index + 2) {
-                span(item.serviceName)
-            }
-            options(7, index + 2) {
-                hPanel {
-                    span(
-                        "${item.doctorLastName} " +
-                                "${item.doctorFirstName} " +
-                                "${item.doctorMiddleName ?: ""},"
-                    ) {
-                        paddingRight = 10.pt
-                    }
-                    span(item.categoryName.plus(",")) {
-                        paddingRight = 10.pt
-                    }
-                    span(item.specialityName)
-                }
-            }
-
-        }
-
     }
 }
 
 
-private fun VPanel.createVisit(uiState: StateFlow<PatientVisitsData>, viewModel: PatientVisitsViewModel) {
+private fun GridPanel.gridPatientVisits(patientVisits: List<PatientVisitIn>) {
+    for ((index: Int, item: PatientVisitIn) in patientVisits.withIndex()) {
+        options(1, index + 2) {
+            link(
+                label = item.visitId.toString(),
+                url = "#/".plus(Routers.VISITS.url).plus(item.visitId),
+            )
+        }
+        options(2, index + 2) {
+            span(item.appointmentDatetime.slice(0..9))
+        }
+        options(3, index + 2) {
+            span(item.appointmentDatetime.slice(11..15))
+        }
+        options(4, index + 2) {
+            span(item.discountedPrice.toString())
+        }
+        options(5, index + 2) {
+            span((item.discountPercentage ?: 0).toString())
+        }
+        options(6, index + 2) {
+            span(item.serviceName)
+        }
+        options(7, index + 2) {
+            hPanel {
+                span(
+                    "${item.doctorLastName} " +
+                            "${item.doctorFirstName} " +
+                            "${item.doctorMiddleName ?: ""},"
+                )
+                span(item.categoryName.plus(",")) {
+                    paddingRight = 10.pt
+                }
+                span(item.specialityName)
+            }
+        }
+    }
+}
+
+
+private fun GridPanel.gridDoctorVisits(doctorVisits: List<DoctorVisitIn>) {
+    for ((index: Int, item: DoctorVisitIn) in doctorVisits.withIndex()) {
+        options(1, index + 2) {
+            link(
+                label = item.visitId.toString(),
+                url = "#/".plus(Routers.VISITS.url).plus(item.visitId),
+            )
+        }
+        options(2, index + 2) {
+            span(item.appointmentDatetime.slice(0..9))
+        }
+        options(3, index + 2) {
+            span(item.appointmentDatetime.slice(11..15))
+        }
+        options(4, index + 2) {
+            span(item.discountedPrice.toString())
+        }
+        options(5, index + 2) {
+            span((item.discountPercentage ?: 0).toString())
+        }
+        options(6, index + 2) {
+            span(item.serviceName)
+        }
+        options(7, index + 2) {
+            hPanel {
+                span(
+                    "${item.patientLastName} " +
+                            "${item.patientFirstName} " +
+                            "${item.patientMiddleName ?: ""},"
+                )
+            }
+        }
+    }
+}
+
+
+private fun VPanel.createVisit(uiState: StateFlow<VisitsData>, viewModel: VisitsViewModel) {
     @Serializable
     data class VisitForm(
         @Contextual val appointmentDate: Date? = null,
