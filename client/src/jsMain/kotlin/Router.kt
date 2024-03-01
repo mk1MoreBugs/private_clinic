@@ -34,6 +34,16 @@ class Router(root: String) {
                     visitId = null,
                 )
             }
+        }).on(getStringRegExp(Routers.DOCTORS.url), { match ->
+            appState.update {
+                it.copy(
+                    views = Views.VISITS,
+                    doctorId = match.data[0].toString().toInt(),
+                    patientId = null,
+                    visitId = null,
+                )
+            }
+            console.log("stateDoctorId", appState.value.doctorId)
         }).on(Routers.PATIENTS.url, {
             console.log("route: /patients")
             appState.update {
