@@ -10,3 +10,10 @@ httpx
 
 # SQLAlchemy
 sqlalchemy
+
+# ODM (Object Document Mapper) for MongoDB
+odmantic
+
+# PyJWT, PassLib
+pyjwt
+passlib[bcrypt]
