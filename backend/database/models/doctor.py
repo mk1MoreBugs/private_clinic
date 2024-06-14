@@ -17,6 +17,7 @@ class Doctor(Base):
     first_name: Mapped[str] = mapped_column(String(50))
     middle_name: Mapped[Optional[str]] = mapped_column(String(50))
     experience: Mapped[int]
+    hashed_password: Mapped[Optional[str]]
     quit_clinic: Mapped[bool] = mapped_column(default=False)  # Уволен ли
     speciality_id: Mapped[int] = mapped_column(ForeignKey("specialities.id"))
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))

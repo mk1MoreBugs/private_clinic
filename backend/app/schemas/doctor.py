@@ -9,6 +9,7 @@ class BaseDoctor(FullName):
 
 
 class DoctorIn(BaseDoctor):
+    hashed_password: str
     speciality_id: int
     category_id: int
 
