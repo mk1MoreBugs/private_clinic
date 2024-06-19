@@ -3,6 +3,8 @@ ktor = "2.3.8"
 coroutines = "1.7.3"
 kotlinVersion = "1.9.22"
 kvisionVersion = "7.3.1"
+versionCatalogUpdate = "0.8.4"
+githubBenmanesVersions = "0.41.0"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -25,3 +27,5 @@ kvision-state-flow = { module = "io.kvision:kvision-state-flow", version.ref = "
 kvision = { id = "io.kvision", version.ref = "kvisionVersion"}
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlinVersion" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlinVersion" }
+version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "versionCatalogUpdate" }
+github-benmanes-versions = { id = "com.github.ben-manes.versions", version.ref = "githubBenmanesVersions" }

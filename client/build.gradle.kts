@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.kvision)
+    alias(libs.plugins.github.benmanes.versions)
+    alias(libs.plugins.version.catalog.update)
+
 }
 
 
