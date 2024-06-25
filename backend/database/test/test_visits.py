@@ -6,7 +6,7 @@ from database.crud.clinic_services import create_clinic_service
 from database.crud.diagnoses import create_diagnosis
 from database.crud.doctor_categories import create_doctor_category
 from database.crud.doctor_specialities import create_doctor_speciality
-from database.crud.doctors import create_doctor, quit_doctor
+from database.crud.doctors import create_doctor
 from database.crud.patients import create_patient
 from database.crud.visiting_sessions import create_visiting_session
 from database.crud.visits import create_visit, read_visits, update_visit, read_visit_by_id, delete_visit
@@ -36,6 +36,7 @@ def create_visits(
             experience=doctors[i]["experience"],
             speciality_id=doctors[i]["speciality_id"],
             category_id=doctors[i]["category_id"],
+            hashed_password=doctors[i]["hashed_password"],
         )
         create_clinic_service(
             session=db_session,
@@ -59,6 +60,7 @@ def create_visits(
             middle_name=item["middle_name"],
             birthday=item["birthday"],
             category_id=item["category_name"],
+            hashed_password=item["hashed_password"]
         )
 
     for item in visits:

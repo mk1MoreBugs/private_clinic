@@ -15,6 +15,7 @@ def test_read_doctor(db_session, doctors, doctor_categories, doctor_specialities
         experience=doctors[0]["experience"],
         speciality_id=doctors[0]["speciality_id"],
         category_id=doctors[0]["category_id"],
+        hashed_password=doctors[0]["hashed_password"],
     )
 
     result = read_doctors(session=db_session)
@@ -37,6 +38,7 @@ def test_quit_doctor(db_session, doctors):
         experience=doctors[0]["experience"],
         speciality_id=doctors[0]["speciality_id"],
         category_id=doctors[0]["category_id"],
+        hashed_password=doctors[0]["hashed_password"],
     )
     quit_doctor(db_session, 1)
     result = read_doctors(session=db_session)

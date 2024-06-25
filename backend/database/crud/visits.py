@@ -7,6 +7,7 @@ from sqlalchemy import delete
 
 from database import Visit, Doctor, DoctorSpeciality, DoctorCategory, Diagnosis, Service, Patient, PatientCategory, \
     VisitingSession
+from database.models.user import User
 
 
 def create_visit(
@@ -53,41 +54,48 @@ def read_visits(
     if doctor_id is None and visit_session_id is None:
         select_statement.extend(
             (
-                Doctor.last_name.label("doctor_last_name"),
-                Doctor.first_name.label("doctor_first_name"),
-                Doctor.middle_name.label("doctor_middle_name"),
+                User.last_name.label("doctor_last_name"),
+                User.first_name.label("doctor_first_name"),
+                User.middle_name.label("doctor_middle_name"),
                 DoctorCategory.name.label("category_name"),
                 DoctorSpeciality.name.label("speciality_name"),
-                Patient.last_name.label("patient_last_name"),
-                Patient.first_name.label("patient_first_name"),
-                Patient.middle_name.label("patient_middle_name"),
+                User.last_name.label("patient_last_name"),
+                User.first_name.label("patient_first_name"),
+                User.middle_name.label("patient_middle_name"),
             )
         )
 
-        where_statement = True,
+        where_statement = (
+            Doctor.user_id == doctor_id,
+            Patient.user_id == User.id,
+        )
 
     elif doctor_id is not None:
         select_statement.extend(
             (
-                Patient.last_name.label("patient_last_name"),
-                Patient.first_name.label("patient_first_name"),
-                Patient.middle_name.label("patient_middle_name"),
+                User.last_name.label("patient_last_name"),
+                User.first_name.label("patient_first_name"),
+                User.middle_name.label("patient_middle_name"),
             )
         )
         where_statement = (
-            Doctor.id == doctor_id,
+            Doctor.user_id == doctor_id,
+            Patient.user_id == User.id,
         )
     else:
         select_statement.extend(
             (
-                Doctor.last_name.label("doctor_last_name"),
-                Doctor.first_name.label("doctor_first_name"),
-                Doctor.middle_name.label("doctor_middle_name"),
+                User.last_name.label("doctor_last_name"),
+                User.first_name.label("doctor_first_name"),
+                User.middle_name.label("doctor_middle_name"),
                 DoctorCategory.name.label("category_name"),
                 DoctorSpeciality.name.label("speciality_name"),
             )
         )
-        where_statement = VisitingSession.id == visit_session_id,
+        where_statement = (
+            VisitingSession.id == visit_session_id,
+            Doctor.user_id == User.id,
+        )
 
     if detailed_information:
         select_statement.extend(
@@ -111,11 +119,11 @@ def read_visits(
     ).join(
         VisitingSession, VisitingSession.id == Visit.visiting_session_id  # todo patient_id not None
     ).join(
-        Patient, Patient.id == VisitingSession.patient_id  # todo doctor_id not None
+        Patient, Patient.user_id == VisitingSession.patient_id  # todo doctor_id not None
     ).join(
         PatientCategory, PatientCategory.id == Patient.category_id, isouter=True
     ).join(
-        Doctor, Doctor.id == Visit.doctor_id  # todo patient_id not None
+        Doctor, Doctor.user_id == Visit.doctor_id  # todo patient_id not None
     ).join(
         DoctorSpeciality, DoctorSpeciality.id == Doctor.speciality_id  # todo patient_id not None
     ).join(
@@ -138,14 +146,14 @@ def read_visit_by_id(
         Visit.discounted_price,
         PatientCategory.discount_percentage,
 
-        Patient.last_name.label("patient_last_name"),
-        Patient.first_name.label("patient_first_name"),
-        Patient.middle_name.label("patient_middle_name"),
+        User.last_name.label("patient_last_name"),
+        User.first_name.label("patient_first_name"),
+        User.middle_name.label("patient_middle_name"),
         Patient.birthday.label("patient_birthday"),
 
-        Doctor.last_name.label("doctor_last_name"),
-        Doctor.first_name.label("doctor_first_name"),
-        Doctor.middle_name.label("doctor_middle_name"),
+        User.last_name.label("doctor_last_name"),
+        User.first_name.label("doctor_first_name"),
+        User.middle_name.label("doctor_middle_name"),
         Doctor.experience.label("doctor_experience"),
         DoctorCategory.name.label("category_name"),
         DoctorSpeciality.name.label("speciality_name"),
@@ -162,13 +170,15 @@ def read_visit_by_id(
     ).join(
         Service, Service.id == Visit.service_id
     ).join(
+        User, User.id == Patient.user_id
+    ).join(
         VisitingSession, VisitingSession.id == Visit.visiting_session_id  # todo patient_id not None
     ).join(
-        Patient, Patient.id == VisitingSession.patient_id  # todo doctor_id not None
+        Patient, Patient.user_id == VisitingSession.patient_id  # todo doctor_id not None
     ).join(
         PatientCategory, PatientCategory.id == Patient.category_id, isouter=True
     ).join(
-        Doctor, Doctor.id == Visit.doctor_id  # todo patient_id not None
+        Doctor, Doctor.user_id == Visit.doctor_id  # todo patient_id not None
     ).join(
         DoctorSpeciality, DoctorSpeciality.id == Doctor.speciality_id  # todo patient_id not None
     ).join(

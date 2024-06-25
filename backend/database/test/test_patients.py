@@ -15,6 +15,7 @@ def test_read_patients(db_session, patients):
         first_name=patients[0]["first_name"],
         middle_name=patients[0]["middle_name"],
         birthday=patients[0]["birthday"],
+        hashed_password=patients[0]["hashed_password"],
     )
     create_patient(
         session=db_session,
@@ -22,6 +23,7 @@ def test_read_patients(db_session, patients):
         first_name=patients[1]["first_name"],
         middle_name=patients[1]["middle_name"],
         birthday=patients[1]["birthday"],
+        hashed_password=patients[0]["hashed_password"],
         category_id=1,
     )
     create_patient(
@@ -30,6 +32,7 @@ def test_read_patients(db_session, patients):
         first_name=patients[2]["first_name"],
         middle_name=patients[2]["middle_name"],
         birthday=patients[2]["birthday"],
+        hashed_password=patients[0]["hashed_password"],
         category_id=None,
     )
 

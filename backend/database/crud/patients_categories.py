@@ -27,7 +27,7 @@ def read_patient_categories_by_visiting_session_id(session: Session, visiting_se
     ).select_from(
         VisitingSession
     ).join(
-        Patient, VisitingSession.patient_id == Patient.id
+        Patient, VisitingSession.patient_id == Patient.user_id
     ).join(
         PatientCategory, PatientCategory.id == Patient.category_id, isouter=True
     ).order_by(

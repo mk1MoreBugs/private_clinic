@@ -48,6 +48,7 @@ def test_read_patient_categories_by_visiting_id_return_10(db_session, patient_ca
         first_name=patients[0]["first_name"],
         middle_name=patients[0]["middle_name"],
         birthday=patients[0]["birthday"],
+        hashed_password=patients[0]["hashed_password"],
         category_id=1,
     )
     create_visiting_session(db_session, patient_id=1)
@@ -70,6 +71,7 @@ def test_read_patient_categories_by_visiting_id_return_none(db_session, patient_
         first_name=patients[0]["first_name"],
         middle_name=patients[0]["middle_name"],
         birthday=patients[0]["birthday"],
+        hashed_password=patients[0]["hashed_password"],
         category_id=None,
     )
     create_visiting_session(db_session, patient_id=1)

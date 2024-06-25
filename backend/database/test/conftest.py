@@ -39,6 +39,7 @@ def doctors():
             "experience": 10,
             "speciality_id": 1,
             "category_id": 1,
+            "hashed_password": "",
         },
         {
             "doctor_id": 2,
@@ -48,6 +49,7 @@ def doctors():
             "experience": 5,
             "speciality_id": 2,
             "category_id": 2,
+            "hashed_password": "",
         },
         {
             "doctor_id": 3,
@@ -57,6 +59,7 @@ def doctors():
             "experience": 15,
             "speciality_id": 3,
             "category_id": 3,
+            "hashed_password": "",
         },
     ]
 
@@ -115,6 +118,7 @@ def patients():
             "middle_name": "Иванович1",
             "birthday": date.fromisoformat("1999-12-04"),
             "category_name": None,
+            "hashed_password": "",
         },
         {
             "last_name": "Иванов2",
@@ -122,6 +126,7 @@ def patients():
             "middle_name": "Иванович2",
             "birthday": date.fromisoformat("1995-12-10"),
             "category_name": "bar",
+            "hashed_password": "",
         },
         {
             "last_name": "Иванов3",
@@ -129,6 +134,7 @@ def patients():
             "middle_name": None,
             "birthday": date.fromisoformat("1995-12-10"),
             "category_name": "bar",
+            "hashed_password": "",
         },
     ]
 

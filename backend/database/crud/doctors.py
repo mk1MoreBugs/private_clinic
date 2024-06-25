@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from sqlalchemy import update
 
 from database import Doctor, DoctorSpeciality, DoctorCategory
+from database.crud.users import create_user, create_user
+from database.models.user import User
 
 
 def create_doctor(
@@ -15,11 +17,16 @@ def create_doctor(
         category_id: int,
         middle_name: str | None = None,
 ):
-    doctor = Doctor(
+    user = create_user(
+        session=session,
         last_name=last_name,
         first_name=first_name,
         middle_name=middle_name,
         hashed_password=hashed_password,
+    )
+
+    doctor = Doctor(
+        user_id=user.id,
         experience=experience,
         speciality_id=speciality_id,
         category_id=category_id,
@@ -30,16 +37,18 @@ def create_doctor(
 
 def read_doctors(session: Session):
     stmt = select(
-        Doctor.id.label("doctor_id"),
-        Doctor.last_name,
-        Doctor.first_name,
-        Doctor.middle_name,
+        Doctor.user_id.label("doctor_id"),
+        User.last_name,
+        User.first_name,
+        User.middle_name,
         Doctor.experience,
         Doctor.quit_clinic,
         DoctorSpeciality.name.label("speciality_name"),
         DoctorCategory.name.label("category_name"),
     ).select_from(
         Doctor,
+    ).join(
+        User
     ).join(
         DoctorSpeciality, isouter=True,
     ).join(
@@ -53,7 +62,7 @@ def quit_doctor(
         session: Session,
         doctor_id: int,
 ):
-    stmt = update(Doctor).where(Doctor.id == doctor_id).values(quit_clinic=True)
+    stmt = update(Doctor).where(Doctor.user_id == doctor_id).values(quit_clinic=True)
 
     session.execute(stmt)
     session.commit()
