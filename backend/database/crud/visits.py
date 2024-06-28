@@ -36,11 +36,16 @@ def create_visit(
     session.commit()
 
 
-def read_visits(
+def read_visits_by_visit_session_id(
+
+):
+    pass
+
+
+def read_visits_like_doctor(
         session: Session,
-        detailed_information: bool = False,
-        visit_session_id: int | None = None,
         doctor_id: int | None = None,
+        detailed_information: bool = False,
 ):
     select_statement = [
         Visit.id.label("visit_id"),
@@ -48,8 +53,58 @@ def read_visits(
         Visit.discounted_price,
         Service.name.label("service_name"),
         PatientCategory.discount_percentage,
-
+        User.last_name.label("patient_last_name"),
+        User.first_name.label("patient_first_name"),
+        User.middle_name.label("patient_middle_name"),
     ]
+
+    where_statement = (
+        Doctor.user_id == doctor_id,
+    )
+
+    if detailed_information:
+        select_statement.extend(
+            (
+                Diagnosis.name.label("diagnosis_name"),
+                Visit.anamnesis,
+                Visit.opinion,
+            )
+        )
+
+    stmt = select(
+        *select_statement
+    ).select_from(
+        Visit
+    ).where(
+        *where_statement
+    ).join(
+        Diagnosis, Visit.diagnosis_id == Diagnosis.id, isouter=True
+    ).join(
+        Service, Visit.service_id == Service.id
+    ).join(
+        VisitingSession, Visit.visiting_session_id == VisitingSession.id
+    ).join(
+        Patient, VisitingSession.patient_id == Patient.user_id,
+    ).join(
+        PatientCategory, Patient.category_id == PatientCategory.id, isouter=True
+    ).join(
+        User, Patient.user_id == User.id
+    ).join(
+        Doctor, Visit.doctor_id == Doctor.user_id
+    ).order_by(
+        Visit.appointment_datetime
+    )
+
+    return session.execute(stmt).mappings().all()  # return list[dict]
+
+
+def read_visits(
+        session: Session,
+        detailed_information: bool = False,
+        visit_session_id: int | None = None,
+        doctor_id: int | None = None,
+):
+    select_statement = list()
 
     if doctor_id is None and visit_session_id is None:
         select_statement.extend(

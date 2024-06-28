@@ -8,8 +8,10 @@ from database.crud.doctor_categories import create_doctor_category
 from database.crud.doctor_specialities import create_doctor_speciality
 from database.crud.doctors import create_doctor
 from database.crud.patients import create_patient
+from database.crud.patients_categories import create_patient_category
 from database.crud.visiting_sessions import create_visiting_session
-from database.crud.visits import create_visit, read_visits, update_visit, read_visit_by_id, delete_visit
+from database.crud.visits import create_visit, read_visits, update_visit, read_visit_by_id, delete_visit, \
+    read_visits_like_doctor
 
 
 @pytest.fixture()
@@ -23,21 +25,14 @@ def create_visits(
         visiting_sessions,
         patients,
         visits,
+        users,
+        patient_categories,
 ):
-    key_doc_cat = list(doctor_categories.keys())
+    keys_doctor_categories = list(doctor_categories.keys())
     for i in range(3):
         create_doctor_speciality(db_session, doctor_specialities[i])
-        create_doctor_category(db_session, doctor_categories[key_doc_cat[i]])
-        create_doctor(
-            session=db_session,
-            last_name=doctors[i]["last_name"],
-            first_name=doctors[i]["first_name"],
-            middle_name=doctors[i]["middle_name"],
-            experience=doctors[i]["experience"],
-            speciality_id=doctors[i]["speciality_id"],
-            category_id=doctors[i]["category_id"],
-            hashed_password=doctors[i]["hashed_password"],
-        )
+        create_doctor_category(db_session, doctor_categories[keys_doctor_categories[i]])
+
         create_clinic_service(
             session=db_session,
             name=services_clinic[i]["name"],
@@ -52,15 +47,28 @@ def create_visits(
             patient_id=visiting_sessions[i]["patient_id"],
         )
 
-    for item in patients:
+    for i in range(len(doctors)):
+        create_doctor(
+            session=db_session,
+            last_name=users[i]["last_name"],
+            first_name=users[i]["first_name"],
+            middle_name=users[i]["middle_name"],
+            hashed_password=users[i]["hashed_password"],
+            experience=doctors[i]["experience"],
+            speciality_id=doctors[i]["speciality_id"],
+            category_id=doctors[i]["category_id"],
+        )
+
+    for i in range(len(patients)):
+        print("create user id:", i+1)
         create_patient(
             session=db_session,
-            last_name=item["last_name"],
-            first_name=item["first_name"],
-            middle_name=item["middle_name"],
-            birthday=item["birthday"],
-            category_id=item["category_name"],
-            hashed_password=item["hashed_password"]
+            last_name=users[i+4]["last_name"],
+            first_name=users[i+4]["first_name"],
+            middle_name=users[i+4]["middle_name"],
+            hashed_password=users[i + 4]["hashed_password"],
+            birthday=patients[i]["birthday"],
+            category_id=patients[i]["category_id"],
         )
 
     for item in visits:
@@ -74,6 +82,13 @@ def create_visits(
             diagnosis_id=item["diagnosis_id"],
             anamnesis=item["anamnesis"],
             opinion=item["opinion"],
+        )
+
+    for item in patient_categories:
+        create_patient_category(
+            session=db_session,
+            category=item.name,
+            discount_percentage=item.discount_percentage,
         )
 
 
@@ -108,8 +123,9 @@ def test_read_visits_like_doctor(
         doctors,
 ):
     for item in doctors:
-        doctor_id = item["doctor_id"]
-        results = read_visits(
+        doctor_id = item["user_id"]
+        print("\ndoctor_id:", doctor_id)
+        results = read_visits_like_doctor(
             session=db_session,
             doctor_id=doctor_id,
         )
@@ -121,7 +137,6 @@ def test_read_visits_like_doctor(
                 print('index:', index)
                 assert results[index]["appointment_datetime"] == visit["appointment_date"]
                 assert results[index]["discounted_price"] == visit["discounted_price"]
-
                 index += 1
 
 
@@ -132,8 +147,8 @@ def test_read_visits_like_doctor_detailed(
         doctors,
 ):
     for item in doctors:
-        doctor_id = item["doctor_id"]
-        results = read_visits(
+        doctor_id = item["user_id"]
+        results = read_visits_like_doctor(
             session=db_session,
             doctor_id=doctor_id,
             detailed_information=True,
