@@ -8,3 +8,4 @@ from .models.patient_category import PatientCategory
 from .models.service import Service
 from .models.visit import Visit
 from .models.visiting_session import VisitingSession
+from database.models.user import User
