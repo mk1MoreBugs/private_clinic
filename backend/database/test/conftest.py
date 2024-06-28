@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 import pytest
 
+from .. import PatientCategory
 from ..database import create_db_tables_and_engine
 
 
@@ -11,7 +12,6 @@ def db_session():
     engine = create_db_tables_and_engine("sqlite://", echo=True)
     with Session(engine) as session:
         return session
-
 
 
 @pytest.fixture()
@@ -32,33 +32,120 @@ def doctor_specialities():
 def doctors():
     return [
         {
-            "doctor_id": 1,
-            "last_name": "Фамилия",
-            "first_name": "Имя",
-            "middle_name": "Отчство",
+            "user_id": 1,
             "experience": 10,
             "speciality_id": 1,
             "category_id": 1,
-            "hashed_password": "",
         },
         {
-            "doctor_id": 2,
-            "last_name": "Фамилия2",
-            "first_name": "Имя",
-            "middle_name": "Отчество",
+            "user_id": 2,
             "experience": 5,
             "speciality_id": 2,
             "category_id": 2,
-            "hashed_password": "",
         },
         {
-            "doctor_id": 3,
-            "last_name": "Фамилия2",
-            "first_name": "Имя",
-            "middle_name": "Отчство",
+            "user_id": 3,
             "experience": 15,
             "speciality_id": 3,
             "category_id": 3,
+        },
+        {
+            "user_id": 4,
+            "experience": 1,
+            "speciality_id": 3,
+            "category_id": 3,
+        },
+    ]
+
+
+@pytest.fixture()
+def patients():
+    return [
+        {
+            "user_id":  5,
+            "birthday": date.fromisoformat("1999-12-04"),
+            "category_name": None,
+            "category_id": None,
+        },
+        {
+            "user_id":  6,
+            "birthday": date.fromisoformat("1995-12-10"),
+            "category_name": "bar",
+            "category_id": 1,
+        },
+        {
+            "user_id":  7,
+            "birthday": date.fromisoformat("1995-12-10"),
+            "category_name": "bar",
+            "category_id": 1,
+        },
+    ]
+
+
+@pytest.fixture()
+def patient_categories():
+    return [
+        PatientCategory(
+            name="test category",
+            discount_percentage=10,
+        ),
+        PatientCategory(
+            name="test category 2",
+            discount_percentage=25,
+        ),
+    ]
+
+
+@pytest.fixture()
+def users():
+    return [
+        {
+            "id": 1,
+            "last_name": "Фамилия",
+            "first_name": "Имя",
+            "middle_name": "Отчство",
+            "hashed_password": "",
+        },
+        {
+            "id": 2,
+            "last_name": "Фамилия2",
+            "first_name": "Имя",
+            "middle_name": "Отчство",
+            "hashed_password": "",
+        },
+        {
+            "id": 3,
+            "last_name": "Фамилия3",
+            "first_name": "Имя",
+            "middle_name": "Отчство",
+            "hashed_password": "",
+        },
+        {
+            "id": 4,
+            "last_name": "Фамилия4",
+            "first_name": "Имя",
+            "middle_name": "Отчство",
+            "hashed_password": "",
+        },
+        {
+            "id": 5,
+            "last_name": "Фамилия5",
+            "first_name": "Имя",
+            "middle_name": "Отчство",
+            "hashed_password": "",
+        },
+        {
+            "id": 6,
+            "last_name": "Фамилия6",
+            "first_name": "Имя",
+            "middle_name": None,
+            "hashed_password": "",
+        },
+        {
+            "id": 7,
+            "last_name": "Фамилия7",
+            "first_name": "Имя",
+            "middle_name": None,
             "hashed_password": "",
         },
     ]
@@ -95,46 +182,16 @@ def diagnosis():
 def visiting_sessions():
     return [
         {
-            'patient_id': 1,
+            'patient_id': 5,
             'visiting_session_id': 1,
          },
         {
-            'patient_id': 1,
+            'patient_id': 6,
             'visiting_session_id': 2,
         },
         {
-            "patient_id": 2,
+            "patient_id": 7,
             'visiting_session_id': 3,
-        },
-    ]
-
-
-@pytest.fixture()
-def patients():
-    return [
-        {
-            "last_name": "Иванов1",
-            "first_name": "Иван1",
-            "middle_name": "Иванович1",
-            "birthday": date.fromisoformat("1999-12-04"),
-            "category_name": None,
-            "hashed_password": "",
-        },
-        {
-            "last_name": "Иванов2",
-            "first_name": "Иван2",
-            "middle_name": "Иванович2",
-            "birthday": date.fromisoformat("1995-12-10"),
-            "category_name": "bar",
-            "hashed_password": "",
-        },
-        {
-            "last_name": "Иванов3",
-            "first_name": "Иван3",
-            "middle_name": None,
-            "birthday": date.fromisoformat("1995-12-10"),
-            "category_name": "bar",
-            "hashed_password": "",
         },
     ]
 
@@ -143,7 +200,7 @@ def patients():
 def visits():
     return [
         {
-            'patient_id': 2,
+            'patient_id': 7,
             'visiting_session_id': 3,
             'service_id': 1,
             'doctor_id': 3,
@@ -154,7 +211,7 @@ def visits():
             'opinion': None,
         },
         {
-            'patient_id': 2,
+            'patient_id': 7,
             'visiting_session_id': 3,
             'service_id': 1,
             'doctor_id': 1,
@@ -165,7 +222,7 @@ def visits():
             'opinion': "baz, bar, foo",
         },
         {
-            'patient_id': 1,
+            'patient_id': 5,
             'visiting_session_id': 1,
             'service_id': 1,
             'doctor_id': 1,
@@ -176,7 +233,7 @@ def visits():
             'opinion': None,
         },
         {
-            'patient_id': 1,
+            'patient_id': 6,
             'visiting_session_id': 2,
             'service_id': 1,
             'doctor_id': 2,
@@ -187,7 +244,7 @@ def visits():
             'opinion': None,
         },
         {
-            'patient_id': 1,
+            'patient_id': 5,
             'visiting_session_id': 1,
             'service_id': 1,
             'doctor_id': 3,
@@ -198,7 +255,7 @@ def visits():
             'opinion': None,
         },
         {
-            'patient_id': 1,
+            'patient_id': 5,
             'visiting_session_id': 1,
             'service_id': 1,
             'doctor_id': 1,
