@@ -3,7 +3,7 @@ from datetime import date
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .users import create_user
+from .users import create_user_and_flush
 from .. import PatientCategory
 from ..models.patient import Patient
 from ..models.user import User
@@ -18,7 +18,7 @@ def create_patient(
         middle_name: str | None = None,
         category_id: int | None = None,
 ):
-    user = create_user(
+    user = create_user_and_flush(
         session=session,
         last_name=last_name,
         first_name=first_name,

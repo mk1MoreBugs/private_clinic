@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import update
 
 from database import Doctor, DoctorSpeciality, DoctorCategory
-from database.crud.users import create_user, create_user
+from database.crud.users import create_user_and_flush
 from database.models.user import User
 
 
@@ -17,7 +17,7 @@ def create_doctor(
         category_id: int,
         middle_name: str | None = None,
 ):
-    user = create_user(
+    user = create_user_and_flush(
         session=session,
         last_name=last_name,
         first_name=first_name,
