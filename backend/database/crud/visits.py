@@ -44,7 +44,7 @@ def read_visits_by_visit_session_id(
 
 def read_visits_like_doctor(
         session: Session,
-        doctor_id: int | None = None,
+        doctor_id: int,
         detailed_information: bool = False,
 ):
     select_statement = [
@@ -63,13 +63,7 @@ def read_visits_like_doctor(
     )
 
     if detailed_information:
-        select_statement.extend(
-            (
-                Diagnosis.name.label("diagnosis_name"),
-                Visit.anamnesis,
-                Visit.opinion,
-            )
-        )
+        select_statement = _expand_list_with_detailed_information(select_statement)
 
     stmt = select(
         *select_statement
@@ -91,6 +85,65 @@ def read_visits_like_doctor(
         User, Patient.user_id == User.id
     ).join(
         Doctor, Visit.doctor_id == Doctor.user_id
+    ).order_by(
+        Visit.appointment_datetime
+    )
+
+    return session.execute(stmt).mappings().all()  # return list[dict]
+
+
+def read_visits_like_patient(
+        session: Session,
+        patient_id: int,
+        detailed_information: bool = False,
+):
+    select_statement = [
+        Visit.id.label("visit_id"),
+        Visit.appointment_datetime,
+        Visit.discounted_price,
+        Service.name.label("service_name"),
+        PatientCategory.discount_percentage,
+        User.last_name.label("doctor_last_name"),
+        User.first_name.label("doctor_first_name"),
+        User.middle_name.label("doctor_middle_name"),
+        DoctorCategory.name.label("category_name"),
+        DoctorSpeciality.name.label("speciality_name"),
+        User.last_name.label("patient_last_name"),
+        User.first_name.label("patient_first_name"),
+        User.middle_name.label("patient_middle_name"),
+    ]
+
+    if detailed_information:
+        select_statement = _expand_list_with_detailed_information(select_statement)
+
+    where_statement = (
+        Patient.user_id == patient_id,
+    )
+
+    stmt = select(
+        *select_statement
+    ).select_from(
+        Visit
+    ).where(
+        *where_statement
+    ).join(
+        Diagnosis, Visit.diagnosis_id == Diagnosis.id, isouter=True
+    ).join(
+        Service, Visit.service_id == Service.id
+    ).join(
+        VisitingSession, Visit.visiting_session_id == VisitingSession.id
+    ).join(
+        Patient, VisitingSession.patient_id == Patient.user_id,
+    ).join(
+        PatientCategory, Patient.category_id == PatientCategory.id, isouter=True
+    ).join(
+        Doctor, Visit.doctor_id == Doctor.user_id
+    ).join(
+        DoctorSpeciality, Doctor.speciality_id == DoctorSpeciality.id
+    ).join(
+        DoctorCategory, Doctor.category_id == DoctorCategory.id
+    ).join(
+        User, Doctor.user_id == User.id
     ).order_by(
         Visit.appointment_datetime
     )
@@ -280,3 +333,14 @@ def delete_visit(
 
     session.execute(stmt)
     session.commit()
+
+
+def _expand_list_with_detailed_information(expand_list: list):
+    expand_list.extend(
+            (
+                Diagnosis.name.label("diagnosis_name"),
+                Visit.anamnesis,
+                Visit.opinion,
+            )
+        )
+    return expand_list
