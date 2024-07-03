@@ -92,7 +92,7 @@ def create_visits(
         )
 
 
-def test_read_visits_like_patient(
+def test_read_visits_by_visit_session_id(
         db_session,
         create_visits,
         visits,
@@ -167,7 +167,7 @@ def test_read_visits_like_doctor_detailed(
                 index += 1
 
 
-def test_read_all_visits(
+def test_read_visits_like_patient(
         db_session,
         create_visits,
         visits,
