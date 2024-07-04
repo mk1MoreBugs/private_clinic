@@ -11,7 +11,7 @@ from database.crud.patients import create_patient
 from database.crud.patients_categories import create_patient_category
 from database.crud.visiting_sessions import create_visiting_session
 from database.crud.visits import create_visit, read_visits, update_visit, read_visit_by_id, delete_visit, \
-    read_visits_like_doctor
+    read_visits_like_doctor, read_visits_like_patient, read_visits_by_visit_session_id
 
 
 @pytest.fixture()
@@ -60,12 +60,12 @@ def create_visits(
         )
 
     for i in range(len(patients)):
-        print("create user id:", i+1)
+        print("create user id:", i + 1)
         create_patient(
             session=db_session,
-            last_name=users[i+4]["last_name"],
-            first_name=users[i+4]["first_name"],
-            middle_name=users[i+4]["middle_name"],
+            last_name=users[i + 4]["last_name"],
+            first_name=users[i + 4]["first_name"],
+            middle_name=users[i + 4]["middle_name"],
             hashed_password=users[i + 4]["hashed_password"],
             birthday=patients[i]["birthday"],
             category_id=patients[i]["category_id"],
@@ -100,7 +100,7 @@ def test_read_visits_by_visit_session_id(
 ):
     for item in visiting_sessions:
         visiting_session_id = item["visiting_session_id"]
-        results = read_visits(
+        results = read_visits_by_visit_session_id(
             session=db_session,
             visit_session_id=visiting_session_id,
         )
@@ -172,14 +172,18 @@ def test_read_visits_like_patient(
         create_visits,
         visits,
 ):
-    results = read_visits(
+    results = read_visits_like_patient(
         session=db_session,
+        patient_id=7,
     )
     print('\n', "results:", *results, sep='\n')
 
     assert results[0]["appointment_datetime"] == visits[0]["appointment_date"]
     assert results[0]["discounted_price"] == visits[0]["discounted_price"]
-    assert len(results) == 6
+    assert results[0]["visiting_session_id"] == visits[0]["visiting_session_id"]
+    assert results[0].get("anamnesis") is None
+    assert results[0].get("opinion") is None
+    assert len(results) == 2
 
 
 def test_read_visit_by_id(
@@ -200,7 +204,7 @@ def test_read_visit_by_id(
 
 
 def test_update_diagnosis_id(db_session, visits, create_visits):
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
 
     update_visit(
@@ -209,13 +213,13 @@ def test_update_diagnosis_id(db_session, visits, create_visits):
         diagnosis_id=1
     )
 
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
     assert results[0]["diagnosis_name"] == "foo"
 
 
 def test_update_anamnesis(db_session, visits, create_visits):
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
 
     new_anamnesis = "bar baz"
@@ -225,13 +229,13 @@ def test_update_anamnesis(db_session, visits, create_visits):
         anamnesis=new_anamnesis
     )
 
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
     assert results[0]["anamnesis"] == new_anamnesis
 
 
 def test_update_opinion(db_session, visits, create_visits):
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
 
     new_opinion = "baz bar"
@@ -241,13 +245,13 @@ def test_update_opinion(db_session, visits, create_visits):
         opinion=new_opinion,
     )
 
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
     assert results[0]["opinion"] == new_opinion
 
 
 def test_update_appointment_datetime(db_session, visits, create_visits):
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
 
     new_datetime = datetime.fromisoformat("2023-02-15")
@@ -257,13 +261,13 @@ def test_update_appointment_datetime(db_session, visits, create_visits):
         appointment_datetime=new_datetime
     )
 
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
     assert results[0]["appointment_datetime"] == new_datetime
 
 
 def test_update_anamnesis_and_diagnosis_id_and_opinion(db_session, visits, create_visits):
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
 
     new_opinion = "baz bar"
@@ -276,7 +280,7 @@ def test_update_anamnesis_and_diagnosis_id_and_opinion(db_session, visits, creat
         diagnosis_id=1
     )
 
-    results = read_visits(session=db_session, detailed_information=True)
+    results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')
     assert results[0]["opinion"] == new_opinion
     assert results[0]["anamnesis"] == new_anamnesis
