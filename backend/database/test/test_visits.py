@@ -10,7 +10,7 @@ from database.crud.doctors import create_doctor
 from database.crud.patients import create_patient
 from database.crud.patients_categories import create_patient_category
 from database.crud.visiting_sessions import create_visiting_session
-from database.crud.visits import create_visit, read_visits, update_visit, read_visit_by_id, delete_visit, \
+from database.crud.visits import create_visit, update_visit, read_visit_by_id, delete_visit, \
     read_visits_like_doctor, read_visits_like_patient, read_visits_by_visit_session_id
 
 
@@ -288,12 +288,12 @@ def test_update_anamnesis_and_diagnosis_id_and_opinion(db_session, visits, creat
 
 
 def test_delete_visit(db_session, create_visits):
-    old_results = read_visits(session=db_session, visit_session_id=1)
+    old_results = read_visits_by_visit_session_id(session=db_session, visit_session_id=1)
     print('\n', "results:", *old_results, sep='\n')
 
     delete_visit(db_session, visit_id=3)
 
-    new_results = read_visits(session=db_session, visit_session_id=1)
+    new_results = read_visits_by_visit_session_id(session=db_session, visit_session_id=1)
     print('\n', "results:", *new_results, sep='\n')
 
     assert len(old_results) - len(new_results) == 1
