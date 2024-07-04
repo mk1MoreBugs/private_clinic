@@ -106,11 +106,10 @@ def read_visit_by_id(
         session: Session,
         visit_id: int,
 ):
+    base_query = _base_select_visits(detailed_information=True)
+
     stmt = select(
-        Visit.id.label("visit_id"),
-        Visit.appointment_datetime,
-        Service.name.label("service_name"),
-        Visit.discounted_price,
+        base_query,
         PatientCategory.discount_percentage,
 
         User.last_name.label("patient_last_name"),
@@ -125,17 +124,12 @@ def read_visit_by_id(
         DoctorCategory.name.label("category_name"),
         DoctorSpeciality.name.label("speciality_name"),
 
-        Diagnosis.name.label("diagnosis_name"),
-        Visit.anamnesis,
-        Visit.opinion,
     ).select_from(
-        Visit
+        base_query
     ).where(
         Visit.id == visit_id
     ).join(
-        Diagnosis, Diagnosis.id == Visit.diagnosis_id, isouter=True
-    ).join(
-        Service, Service.id == Visit.service_id
+        Visit, Visit.id == base_query.c.visit_id
     ).join(
         User, User.id == Patient.user_id
     ).join(
@@ -205,41 +199,53 @@ def _expand_list_with_detailed_information(expand_list: list):
     return expand_list
 
 
-def _select_visits_by_patient_id(
-        patient_id: int,
+def _base_select_visits(
         detailed_information: bool,
 ):
     select_statement = [
         Visit.id.label("visit_id"),
-        Visit.visiting_session_id,
         Visit.appointment_datetime,
         Visit.discounted_price,
         Service.name.label("service_name"),
-        PatientCategory.discount_percentage,
-        User.last_name.label("doctor_last_name"),
-        User.first_name.label("doctor_first_name"),
-        User.middle_name.label("doctor_middle_name"),
-        DoctorCategory.name.label("category_name"),
-        DoctorSpeciality.name.label("speciality_name"),
     ]
 
     if detailed_information:
         select_statement = _expand_list_with_detailed_information(select_statement)
 
-    where_statement = (
-        Patient.user_id == patient_id,
-    )
-
-    stmt = select(
+    base_query = select(
         *select_statement
     ).select_from(
         Visit
-    ).where(
-        *where_statement
     ).join(
         Diagnosis, Visit.diagnosis_id == Diagnosis.id, isouter=True
     ).join(
         Service, Visit.service_id == Service.id
+    ).subquery()
+    return base_query
+
+
+def _select_visits_by_patient_id(
+        patient_id: int,
+        detailed_information: bool,
+):
+    base_query = _base_select_visits(detailed_information)
+
+    stmt = select(
+        base_query,
+        PatientCategory.discount_percentage,
+
+        Visit.visiting_session_id,
+        User.last_name.label("doctor_last_name"),
+        User.first_name.label("doctor_first_name"),
+        User.middle_name.label("doctor_middle_name"),
+        DoctorCategory.name.label("category_name"),
+        DoctorSpeciality.name.label("speciality_name"),
+    ).select_from(
+        base_query
+    ).where(
+        Patient.user_id == patient_id,
+    ).join(
+        Visit, Visit.id == base_query.c.visit_id
     ).join(
         VisitingSession, Visit.visiting_session_id == VisitingSession.id
     ).join(
@@ -264,34 +270,22 @@ def _select_visits_by_doctor_id(
         doctor_id: int,
         detailed_information: bool,
 ):
-    select_statement = [
-        Visit.id.label("visit_id"),
-        Visit.appointment_datetime,
-        Visit.discounted_price,
-        Service.name.label("service_name"),
+    base_query = _base_select_visits(detailed_information)
+
+    stmt = select(
+        base_query,
         PatientCategory.discount_percentage,
+
         User.last_name.label("patient_last_name"),
         User.first_name.label("patient_first_name"),
         User.middle_name.label("patient_middle_name"),
-    ]
 
-    where_statement = (
-        Doctor.user_id == doctor_id,
-    )
-
-    if detailed_information:
-        select_statement = _expand_list_with_detailed_information(select_statement)
-
-    stmt = select(
-        *select_statement
     ).select_from(
-        Visit
+        base_query
     ).where(
-        *where_statement
+        Doctor.user_id == doctor_id,
     ).join(
-        Diagnosis, Visit.diagnosis_id == Diagnosis.id, isouter=True
-    ).join(
-        Service, Visit.service_id == Service.id
+        Visit, Visit.id == base_query.c.visit_id
     ).join(
         VisitingSession, Visit.visiting_session_id == VisitingSession.id
     ).join(
