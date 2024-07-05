@@ -1,4 +1,3 @@
-import selectors
 from datetime import datetime
 
 from sqlalchemy import select
@@ -42,7 +41,19 @@ def read_visits_like_doctor(
         doctor_id: int,
         detailed_information: bool = False,
 ):
-    stmt = _select_visits_by_doctor_id(doctor_id, detailed_information)
+    sub_query_doctor = _sub_select_visits_by_doctor_id(detailed_information)
+
+    stmt = select(
+        sub_query_doctor,
+    ).select_from(
+        sub_query_doctor
+    ).where(
+        Visit.doctor_id == doctor_id,
+    ).join(
+        Visit, sub_query_doctor.c.visit_id == Visit.id
+    ).order_by(
+        Visit.appointment_datetime
+    )
 
     return session.execute(stmt).mappings().all()  # return list[dict]
 
@@ -52,9 +63,22 @@ def read_visits_like_patient(
         patient_id: int,
         detailed_information: bool = False,
 ):
-    stmt = _select_visits_by_patient_id(patient_id, detailed_information)
+    sub_query_patient = _sub_select_visits_by_patient_id(detailed_information)
+    stmt = select(
+        sub_query_patient,
+    ).select_from(
+        sub_query_patient
+    ).where(
+        VisitingSession.patient_id == patient_id,
+    ).join(
+        VisitingSession, sub_query_patient.c.visiting_session_id == VisitingSession.id
+    ).join(
+        Visit, Visit.id == sub_query_patient.c.visit_id
+    ).order_by(
+        Visit.appointment_datetime
+    )
 
-    return session.execute(stmt.select()).mappings().all()  # return list[dict]
+    return session.execute(stmt).mappings().all()  # return list[dict]
 
 
 def read_visits_by_visit_session_id(
@@ -62,39 +86,25 @@ def read_visits_by_visit_session_id(
         visit_session_id: int,
         detailed_information: bool = False,
 ):
-    statement_for_patient_id = select(
-        VisitingSession.patient_id
-    ).select_from(
-        VisitingSession
-    ).where(
-        VisitingSession.id == visit_session_id
-    )
-    patient_id = session.execute(statement_for_patient_id).scalars().one()
 
-    sub_select_for_user = _select_visits_by_patient_id(
-        patient_id=patient_id,
+    sub_select_for_user = _sub_select_visits_by_patient_id(
+        detailed_information=detailed_information,
+    )
+    sub_select_for_doctor = _sub_select_visits_by_doctor_id(
         detailed_information=detailed_information,
     )
 
     stmt = select(
         sub_select_for_user,
-        User.last_name.label("doctor_last_name"),
-        User.first_name.label("doctor_first_name"),
-        User.middle_name.label("doctor_middle_name"),
-        DoctorCategory.name.label("category_name"),
-        DoctorSpeciality.name.label("speciality_name"),
+        sub_select_for_doctor,
     ).select_from(
         sub_select_for_user,
+    ).where(
+        Visit.visiting_session_id == visit_session_id,
     ).join(
         Visit, sub_select_for_user.c.visit_id == Visit.id,
     ).join(
-        Doctor, Visit.doctor_id == Doctor.user_id
-    ).join(
-        DoctorSpeciality, Doctor.speciality_id == DoctorSpeciality.id
-    ).join(
-        DoctorCategory, Doctor.category_id == DoctorCategory.id
-    ).join(
-        User, Doctor.user_id == User.id
+        sub_select_for_doctor, sub_select_for_doctor.c.visit_id == Visit.id,
     ).order_by(
         Visit.appointment_datetime
     )
@@ -106,49 +116,30 @@ def read_visit_by_id(
         session: Session,
         visit_id: int,
 ):
-    base_query = _base_select_visits(detailed_information=True)
+    sub_select_for_user = _sub_select_visits_by_patient_id(
+        detailed_information=True,
+    )
+    sub_select_for_doctor = _sub_select_visits_by_doctor_id(
+        detailed_information=True,
+    )
 
     stmt = select(
-        base_query,
-        PatientCategory.discount_percentage,
-
-        User.last_name.label("patient_last_name"),
-        User.first_name.label("patient_first_name"),
-        User.middle_name.label("patient_middle_name"),
-        Patient.birthday.label("patient_birthday"),
-
-        User.last_name.label("doctor_last_name"),
-        User.first_name.label("doctor_first_name"),
-        User.middle_name.label("doctor_middle_name"),
-        Doctor.experience.label("doctor_experience"),
-        DoctorCategory.name.label("category_name"),
-        DoctorSpeciality.name.label("speciality_name"),
+        sub_select_for_user,
+        sub_select_for_doctor,
 
     ).select_from(
-        base_query
+        sub_select_for_user
     ).where(
         Visit.id == visit_id
     ).join(
-        Visit, Visit.id == base_query.c.visit_id
+        Visit, Visit.id == sub_select_for_user.c.visit_id
     ).join(
-        User, User.id == Patient.user_id
-    ).join(
-        VisitingSession, VisitingSession.id == Visit.visiting_session_id  # todo patient_id not None
-    ).join(
-        Patient, Patient.user_id == VisitingSession.patient_id  # todo doctor_id not None
-    ).join(
-        PatientCategory, PatientCategory.id == Patient.category_id, isouter=True
-    ).join(
-        Doctor, Doctor.user_id == Visit.doctor_id  # todo patient_id not None
-    ).join(
-        DoctorSpeciality, DoctorSpeciality.id == Doctor.speciality_id  # todo patient_id not None
-    ).join(
-        DoctorCategory, DoctorCategory.id == Doctor.category_id  # todo patient_id not None
+        sub_select_for_doctor, Visit.id == sub_select_for_doctor.c.visit_id
     ).order_by(
         Visit.appointment_datetime
     )
 
-    return session.execute(stmt).mappings().all()  # todo return list[dict]
+    return session.execute(stmt).mappings().all()
 
 
 def update_visit(
@@ -199,7 +190,7 @@ def _expand_list_with_detailed_information(expand_list: list):
     return expand_list
 
 
-def _base_select_visits(
+def _base_sub_select_visits(
         detailed_information: bool,
 ):
     select_statement = [
@@ -207,6 +198,8 @@ def _base_select_visits(
         Visit.appointment_datetime,
         Visit.discounted_price,
         Service.name.label("service_name"),
+        PatientCategory.discount_percentage,
+
     ]
 
     if detailed_information:
@@ -220,38 +213,35 @@ def _base_select_visits(
         Diagnosis, Visit.diagnosis_id == Diagnosis.id, isouter=True
     ).join(
         Service, Visit.service_id == Service.id
-    ).subquery()
-    return base_query
-
-
-def _select_visits_by_patient_id(
-        patient_id: int,
-        detailed_information: bool,
-):
-    base_query = _base_select_visits(detailed_information)
-
-    stmt = select(
-        base_query,
-        PatientCategory.discount_percentage,
-
-        Visit.visiting_session_id,
-        User.last_name.label("doctor_last_name"),
-        User.first_name.label("doctor_first_name"),
-        User.middle_name.label("doctor_middle_name"),
-        DoctorCategory.name.label("category_name"),
-        DoctorSpeciality.name.label("speciality_name"),
-    ).select_from(
-        base_query
-    ).where(
-        Patient.user_id == patient_id,
-    ).join(
-        Visit, Visit.id == base_query.c.visit_id
     ).join(
         VisitingSession, Visit.visiting_session_id == VisitingSession.id
     ).join(
         Patient, VisitingSession.patient_id == Patient.user_id,
     ).join(
         PatientCategory, Patient.category_id == PatientCategory.id, isouter=True
+    ).subquery()
+    return base_query
+
+
+def _sub_select_visits_by_patient_id(
+        detailed_information: bool,
+):
+    base_query = _base_sub_select_visits(detailed_information)
+
+    stmt = select(
+        base_query,
+
+        Visit.visiting_session_id,
+        User.last_name.label("doctor_last_name"),
+        User.first_name.label("doctor_first_name"),
+        User.middle_name.label("doctor_middle_name"),
+        Doctor.experience.label("doctor_experience"),
+        DoctorCategory.name.label("category_name"),
+        DoctorSpeciality.name.label("speciality_name"),
+    ).select_from(
+        base_query
+    ).join(
+        Visit, Visit.id == base_query.c.visit_id
     ).join(
         Doctor, Visit.doctor_id == Doctor.user_id
     ).join(
@@ -260,30 +250,25 @@ def _select_visits_by_patient_id(
         DoctorCategory, Doctor.category_id == DoctorCategory.id
     ).join(
         User, Doctor.user_id == User.id
-    ).order_by(
-        Visit.appointment_datetime
     ).subquery()
     return stmt
 
 
-def _select_visits_by_doctor_id(
-        doctor_id: int,
+def _sub_select_visits_by_doctor_id(
         detailed_information: bool,
 ):
-    base_query = _base_select_visits(detailed_information)
+    base_query = _base_sub_select_visits(detailed_information)
 
     stmt = select(
         base_query,
-        PatientCategory.discount_percentage,
 
         User.last_name.label("patient_last_name"),
         User.first_name.label("patient_first_name"),
         User.middle_name.label("patient_middle_name"),
+        Patient.birthday.label("patient_birthday"),
 
     ).select_from(
         base_query
-    ).where(
-        Doctor.user_id == doctor_id,
     ).join(
         Visit, Visit.id == base_query.c.visit_id
     ).join(
@@ -291,12 +276,8 @@ def _select_visits_by_doctor_id(
     ).join(
         Patient, VisitingSession.patient_id == Patient.user_id,
     ).join(
-        PatientCategory, Patient.category_id == PatientCategory.id, isouter=True
-    ).join(
         User, Patient.user_id == User.id
     ).join(
         Doctor, Visit.doctor_id == Doctor.user_id
-    ).order_by(
-        Visit.appointment_datetime
-    )
+    ).subquery()
     return stmt
