@@ -203,6 +203,21 @@ def test_read_visit_by_id(
     assert visit[0]["opinion"] == visits[0]["opinion"]
 
 
+def test_read_visit_id_2_and_check_that_the_names_of_doctor_and_patient_are_returned(
+        db_session,
+        create_visits,
+        visits,
+        users,
+):
+    visit = read_visit_by_id(
+        session=db_session,
+        visit_id=2
+    )
+    print('\n', "results:", visit, sep='\n')
+    assert visit[0]["doctor_first_name"] == users[0]["first_name"]
+    assert visit[0]["patient_first_name"] == users[6]["first_name"]
+
+
 def test_update_diagnosis_id(db_session, visits, create_visits):
     results = read_visit_by_id(session=db_session, visit_id=1)
     print('\n', "results:", *results, sep='\n')

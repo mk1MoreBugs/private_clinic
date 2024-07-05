@@ -102,7 +102,7 @@ def users():
         {
             "id": 1,
             "last_name": "Фамилия",
-            "first_name": "Имя",
+            "first_name": "ИмяДоктор",
             "middle_name": "Отчство",
             "hashed_password": "",
         },
@@ -144,7 +144,7 @@ def users():
         {
             "id": 7,
             "last_name": "Фамилия7",
-            "first_name": "Имя",
+            "first_name": "ИмяПациент",
             "middle_name": None,
             "hashed_password": "",
         },
