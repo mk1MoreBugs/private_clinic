@@ -9,12 +9,14 @@ pytest
 httpx
 
 # SQLAlchemy
-sqlalchemy
+SQLAlchemy
 alembic
 
 # ODM (Object Document Mapper) for MongoDB
 #odmantic
 
 # PyJWT, PassLib
-pyjwt
+PyJWT
 passlib[bcrypt]
+
+mypy
