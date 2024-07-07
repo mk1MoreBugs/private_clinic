@@ -31,11 +31,11 @@ async def create_visit(
         session,
         visiting_session_id=visit.visiting_session_id,
     )
-    visit = dict(visit)
+    visit_dict = dict(visit)
     if discount_percentage is not None:
-        visit["discounted_price"] = int(visit.get("discounted_price") * (1 - discount_percentage/100))
+        visit_dict["discounted_price"] = int(visit_dict.get("discounted_price") * (1 - discount_percentage/100))
 
-    visits.create_visit(session=session, **visit)
+    visits.create_visit(session=session, **visit_dict)
 
 
 @router.put("/update/{visit_id}")
