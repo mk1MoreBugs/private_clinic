@@ -25,7 +25,7 @@ async def read_visits_by_doctor_id(
         doctor_id: int,
         session: Session = Depends(session_db),
 ) -> list[VisitSelectForDoctor]:
-    visits_by_doctor_id: list[VisitSelectForDoctor] = visits.read_visits(
+    visits_by_doctor_id: list[VisitSelectForDoctor] = visits.read_visits_like_doctor(
         session=session,
         doctor_id=doctor_id,
     )
