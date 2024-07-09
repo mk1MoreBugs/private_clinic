@@ -51,3 +51,35 @@ def read_users(session: Session):
     )
 
     return session.execute(stmt).scalars().all()
+
+
+def read_hashed_password(
+        session: Session,
+        user_id: int,
+) -> str:
+    stmt = select(
+        User.hashed_password,
+    ).select_from(
+        User,
+    ).where(
+        User.id == user_id,
+    )
+
+    result = session.execute(stmt)
+
+    return result.scalars().one()
+
+
+def update_hashed_password(
+        session: Session,
+        user_id: int,
+        new_hashed_password: str,
+):
+    stmt = update(
+        User
+    ).where(
+        User.id == user_id,
+    ).values(
+        hashed_password=new_hashed_password,
+    )
+    session.execute(stmt)
