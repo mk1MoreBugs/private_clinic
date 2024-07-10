@@ -1,3 +1,5 @@
+from database.crud.doctors import create_doctor
+from database.crud.patients import read_patient_by_id, create_patient
 from database.crud.users import create_user_and_commit, read_users, read_hashed_password, update_hashed_password
 
 
@@ -66,3 +68,63 @@ def test_create_user_and_update_hashed_password(db_session, users):
     )
     print(result_hashed_pass)
     assert result_hashed_pass == update_password
+
+
+def test_verify_user_role_with_doctor_entry_in_the_database(
+        db_session,
+        users,
+        doctors,
+):
+    create_doctor(
+        session=db_session,
+        last_name=users[0]["last_name"],
+        first_name=users[0]["first_name"],
+        middle_name=users[0]["middle_name"],
+        hashed_password=users[0]["hashed_password"],
+        experience=doctors[0]["experience"],
+        speciality_id=doctors[0]["speciality_id"],
+        category_id=doctors[0]["category_id"],
+    )
+
+    patient = read_patient_by_id(
+        session=db_session,
+        user_id=1
+    )
+    doctor = read_patient_by_id(
+        session=db_session,
+        user_id=1
+    )
+    print(patient)
+
+    assert patient is None
+    assert doctor == 1
+
+
+def test_verify_user_role_with_patient_entry_in_the_database(
+        db_session,
+        users,
+        patients,
+):
+    create_patient(
+        session=db_session,
+        last_name=users[4]["last_name"],
+        first_name=users[4]["first_name"],
+        middle_name=users[4]["middle_name"],
+        hashed_password=users[4]["hashed_password"],
+        birthday=patients[0]["birthday"],
+    )
+
+    patient = read_patient_by_id(
+        session=db_session,
+        user_id=1
+    )
+    print(patient)
+
+    doctor = read_patient_by_id(
+        session=db_session,
+        user_id=1
+    )
+    print(patient)
+
+    assert patient.user_id == 1
+    assert doctor is None

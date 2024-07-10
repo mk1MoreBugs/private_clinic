@@ -58,6 +58,19 @@ def read_doctors(session: Session):
     return session.execute(stmt).mappings().all()  # return list[dict]
 
 
+def read_patient_by_id(session: Session, user_id: int):
+    stmt = select(
+        Doctor
+    ).select_from(
+        Doctor,
+    ).where(
+        Doctor.user_id == user_id
+    )
+    result = session.execute(stmt)
+
+    return result.scalars().one_or_none()
+
+
 def quit_doctor(
         session: Session,
         doctor_id: int,
