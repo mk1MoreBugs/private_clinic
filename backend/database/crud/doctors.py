@@ -58,7 +58,7 @@ def read_doctors(session: Session):
     return session.execute(stmt).mappings().all()  # return list[dict]
 
 
-def read_patient_by_id(session: Session, user_id: int):
+def read_doctor_by_id(session: Session, user_id: int):
     stmt = select(
         Doctor
     ).select_from(

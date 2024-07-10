@@ -1,4 +1,4 @@
-from database.crud.doctors import create_doctor
+from database.crud.doctors import create_doctor, read_doctor_by_id
 from database.crud.patients import read_patient_by_id, create_patient
 from database.crud.users import create_user_and_commit, read_users, read_hashed_password, update_hashed_password
 
@@ -90,14 +90,14 @@ def test_verify_user_role_with_doctor_entry_in_the_database(
         session=db_session,
         user_id=1
     )
-    doctor = read_patient_by_id(
+    doctor = read_doctor_by_id(
         session=db_session,
         user_id=1
     )
     print(patient)
 
     assert patient is None
-    assert doctor == 1
+    assert doctor.user_id == 1
 
 
 def test_verify_user_role_with_patient_entry_in_the_database(
@@ -120,7 +120,7 @@ def test_verify_user_role_with_patient_entry_in_the_database(
     )
     print(patient)
 
-    doctor = read_patient_by_id(
+    doctor = read_doctor_by_id(
         session=db_session,
         user_id=1
     )
