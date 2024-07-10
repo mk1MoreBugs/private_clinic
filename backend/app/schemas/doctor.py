@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from pydantic import Field
-from app.schemas.full_name import FullName
+from app.schemas.user import FullName
 
 
 class BaseDoctor(FullName):

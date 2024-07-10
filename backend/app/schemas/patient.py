@@ -1,6 +1,6 @@
 from datetime import date
 
-from app.schemas.full_name import FullName
+from app.schemas.user import FullName
 
 
 class PatientBase(FullName):
