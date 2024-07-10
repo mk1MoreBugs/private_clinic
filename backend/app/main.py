@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.dependencies import session_db
-from app.routers import visits, doctors, patients, visiting_session
+from app.routers import visits, doctors, patients, visiting_session, authorization
 from app.schemas.base_item import BaseItem
 from app.schemas.clinic_service import ClinicService
 from app.schemas.patient_category import PatientCategory
@@ -19,6 +19,7 @@ app.include_router(visits.router)
 app.include_router(doctors.router)
 app.include_router(patients.router)
 app.include_router(visiting_session.router)
+app.include_router(authorization.router)
 
 origins = [
     "http://localhost",
