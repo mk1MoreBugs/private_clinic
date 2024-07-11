@@ -1,4 +1,7 @@
 from sqlalchemy.orm import Session
+from fastapi import HTTPException
+from starlette import status
+
 
 from app.security.password import verify_password
 from database.crud.doctors import read_doctor_by_id
@@ -15,6 +18,14 @@ def authenticate_user(
         session=session,
         user_id=string_to_integer(user_id),
     )
+
+    if hashed_password is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Password not defined",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     is_verify_user = verify_password(
         plain_password=password,
         hashed_password=hashed_password,
