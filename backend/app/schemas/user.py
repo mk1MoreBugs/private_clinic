@@ -11,5 +11,5 @@ class FullName(BaseModel):
 
 
 class User(BaseModel):
-    user_id: int
+    user_id: str
     roles: str
