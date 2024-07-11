@@ -17,5 +17,4 @@ class FullName(BaseModel):
 
 class UserInDB(BaseModel):
     user_id: int
-    hashed_password: str
     role: CategoryEnum
