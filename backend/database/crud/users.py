@@ -56,7 +56,7 @@ def read_users(session: Session):
 def read_hashed_password(
         session: Session,
         user_id: int,
-) -> str:
+) -> str | None:
     stmt = select(
         User.hashed_password,
     ).select_from(
@@ -67,7 +67,7 @@ def read_hashed_password(
 
     result = session.execute(stmt)
 
-    return result.scalars().one()
+    return result.scalars().one_or_none()
 
 
 def update_hashed_password(
