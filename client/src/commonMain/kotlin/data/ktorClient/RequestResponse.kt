@@ -7,13 +7,30 @@ import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
 
 
 class RequestResponse {
-    private val client = HttpClient() {
+    private val client = HttpClient {
         install(ContentNegotiation) {
             json()
         }
+
+        install(Auth) {
+            bearer {
+                loadTokens {
+                    // Load tokens from a local storage and return them as the 'BearerTokens' instance
+                    BearerTokens("abc123", "xyz111")
+                }
+                refreshTokens { // this: RefreshTokensParams
+                    // Refresh tokens and return them as the 'BearerTokens' instance
+                    BearerTokens("def456", "xyz111")
+                }
+
+            }
+        }
+
         expectSuccess = true
         HttpResponseValidator{
             handleResponseExceptionWithRequest { exception, _ ->
