@@ -19,6 +19,7 @@ kvision-bootstrap-icons = { module = "io.kvision:kvision-bootstrap-icons", versi
 kvision-datetime = { module = "io.kvision:kvision-datetime", version.ref = "kvisionVersion" }
 kvision-state = { module = "io.kvision:kvision-state", version.ref = "kvisionVersion" }
 kvision-state-flow = { module = "io.kvision:kvision-state-flow", version.ref = "kvisionVersion" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 
 
 [plugins]
