@@ -1,7 +1,7 @@
 [versions]
-ktor = "2.3.8"
+ktor = "2.3.12"
 coroutines = "1.7.3"
-kotlinVersion = "1.9.22"
+kotlinVersion = "2.0.0"
 kvisionVersion = "7.3.1"
 
 [libraries]

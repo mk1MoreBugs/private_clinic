@@ -41,7 +41,7 @@ kotlin {
             implementation(libs.kvision.state)
             implementation(libs.kvision.state.flow)
 
-            implementation(npm("css-loader", "6.10.0"))
+            implementation(npm("css-loader", "7.1.2"))
 
             implementation(libs.ktor.client.js)
         }
