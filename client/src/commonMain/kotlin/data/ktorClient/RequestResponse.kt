@@ -1,6 +1,8 @@
 package data.ktorClient
 
+import data.models.JWTToken
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
@@ -9,9 +11,12 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.client.plugins.auth.*
 import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.request.forms.*
 
 
 class RequestResponse {
+    private val bearerTokenStorage: MutableList<BearerTokens> = mutableListOf<BearerTokens>()
+
     private val client = HttpClient {
         install(ContentNegotiation) {
             json()
@@ -20,14 +25,11 @@ class RequestResponse {
         install(Auth) {
             bearer {
                 loadTokens {
-                    // Load tokens from a local storage and return them as the 'BearerTokens' instance
-                    BearerTokens("abc123", "xyz111")
+                    bearerTokenStorage.last()
                 }
-                refreshTokens { // this: RefreshTokensParams
-                    // Refresh tokens and return them as the 'BearerTokens' instance
-                    BearerTokens("def456", "xyz111")
+                sendWithoutRequest { request ->
+                    request.url.host == Routers.HOST.url
                 }
-
             }
         }
 
@@ -102,5 +104,19 @@ class RequestResponse {
 
         console.log(response.status.toString())
         return response
+    }
+
+    suspend fun getToken(
+        username: String,
+        password: String,
+    ) {
+        val token: JWTToken = client.submitForm (
+            url = Routers.HOST.url.plus("/authorization/token"),
+            formParameters = parameters {
+                append("username", username)
+                append("password", password)
+            }
+        ).body()
+        bearerTokenStorage.add(BearerTokens(accessToken = token.accessToken, refreshToken = ""))
     }
 }
