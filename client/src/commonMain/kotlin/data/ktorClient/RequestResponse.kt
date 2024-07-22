@@ -15,7 +15,12 @@ import io.ktor.client.request.forms.*
 
 
 class RequestResponse {
-    private val bearerTokenStorage: MutableList<BearerTokens> = mutableListOf<BearerTokens>()
+    private val bearerTokenStorage: MutableList<BearerTokens> = mutableListOf(
+        BearerTokens(
+            accessToken="",
+            refreshToken = "",
+        )
+    )
 
     private val client = HttpClient {
         install(ContentNegotiation) {
@@ -36,9 +41,12 @@ class RequestResponse {
         expectSuccess = true
         HttpResponseValidator{
             handleResponseExceptionWithRequest { exception, _ ->
-                val clientException = exception as? ClientRequestException ?: return@handleResponseExceptionWithRequest
+                println("exception!")
+                println("cause: ${exception.cause}, message: ${exception.message}")
+                val clientException = exception as? ResponseException ?: return@handleResponseExceptionWithRequest
                 val exceptionResponse = clientException.response
                 val exceptionResponseText = exceptionResponse.bodyAsText()
+
                 if (exceptionResponse.status.value / 100 == 4) {
                     throw ClientRequestException(exceptionResponse, exceptionResponseText)
                 }
