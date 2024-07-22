@@ -5,6 +5,7 @@ import data.Repository
 import data.models.BaseItem
 import data.models.DoctorIn
 import data.models.DoctorOut
+import io.ktor.client.plugins.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,14 +39,28 @@ class DoctorsViewModel(private val repository: IRepository = Repository()) {
             )
         }
         console.log("fetch doctors")
-        _uiState.update {
-            it.copy(
-                doctors = repository.readDoctors(),
-                doctorCategories = repository.readDoctorCategories(),
-                doctorSpecialities = repository.readDoctorSpecialities(),
-                fetchData = false,
-            )
+        try {
+            _uiState.update {
+                it.copy(
+                    doctors = repository.readDoctors(),
+                    doctorCategories = repository.readDoctorCategories(),
+                    doctorSpecialities = repository.readDoctorSpecialities(),
+                )
+            }
+        } catch (error: ClientRequestException) {
+            println("error")
+            println(error.message)
+        } catch (error: ServerResponseException) {
+            println("error")
+            println(error.message)
+        } finally {
+            _uiState.update {
+                it.copy(
+                    fetchData = false,
+                )
+            }
         }
+
     }
 
 
