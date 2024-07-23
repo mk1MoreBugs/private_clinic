@@ -2,6 +2,7 @@ package mk1morebugs.viewModels
 
 import data.IRepository
 import data.Repository
+import data.ktorClient.NetworkErrorException
 import data.models.BaseItem
 import data.models.DoctorIn
 import data.models.DoctorOut
@@ -48,12 +49,12 @@ class DoctorsViewModel(private val repository: IRepository = Repository()) {
                 )
             }
         } catch (error: ClientRequestException) {
-            println("error")
-            println(error.message)
+            printErrorMessage(error)
         } catch (error: ServerResponseException) {
-            println("error")
-            println(error.message)
-        } finally {
+            printErrorMessage(error)
+        } catch (error: NetworkErrorException) {
+            printErrorMessage(error)
+        }  finally {
             _uiState.update {
                 it.copy(
                     fetchData = false,
@@ -68,5 +69,10 @@ class DoctorsViewModel(private val repository: IRepository = Repository()) {
         console.log("create...")
         repository.createDoctor(doctor)
         getData()
+    }
+
+
+    private fun printErrorMessage(error: Exception) {
+        println("error message: ${error.message}")
     }
 }
