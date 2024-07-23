@@ -43,6 +43,13 @@ class RequestResponse {
             handleResponseExceptionWithRequest { exception, _ ->
                 println("exception!")
                 println("cause: ${exception.cause}, message: ${exception.message}")
+
+                // throw NetworkError Exception when NetworkError is happened
+                val exceptionCause = exception.cause?.toString() ?: ""
+                if ("NetworkError" in exceptionCause) {
+                    throw NetworkErrorException(message = exception.message!!)
+                }
+
                 val clientException = exception as? ResponseException ?: return@handleResponseExceptionWithRequest
                 val exceptionResponse = clientException.response
                 val exceptionResponseText = exceptionResponse.bodyAsText()
