@@ -39,6 +39,23 @@ class App : Application() {
                         url = "#/doctors",
                         icon = "bi bi-clipboard2-pulse-fill",
                         )
+
+
+                }
+                nav {
+                if (appState.value.userId == null) {
+                    navLink(
+                        label = "Login",
+                        url = "#/login",
+                    )
+                } else {
+                    navLink(
+                        label = "user ID: ${appState.value.userId}",
+                        url = "#/login",
+                    )
+                }
+
+
                 }
             }
 
