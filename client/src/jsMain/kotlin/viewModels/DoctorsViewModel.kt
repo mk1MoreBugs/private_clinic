@@ -20,6 +20,7 @@ data class DoctorsData(
     val doctors: List<DoctorIn> = listOf(),
     val doctorCategories: List<BaseItem> = listOf(),
     val doctorSpecialities: List<BaseItem> = listOf(),
+    val errorMessage: String? = null
 )
 
 
@@ -39,17 +40,20 @@ class DoctorsViewModel(private val repository: IRepository = Repository()) {
                 fetchData = true
             )
         }
-        console.log("fetch doctors")
+
+        var doctors: List<DoctorIn> = listOf()
+        var doctorCategories: List<BaseItem> = listOf()
+        var doctorSpecialities: List<BaseItem> = listOf()
+        var errorMessage: String? = null
         try {
-            _uiState.update {
-                it.copy(
-                    doctors = repository.readDoctors(),
-                    doctorCategories = repository.readDoctorCategories(),
-                    doctorSpecialities = repository.readDoctorSpecialities(),
-                )
-            }
+            console.log("fetch doctors")
+            doctors = repository.readDoctors()
+            doctorCategories = repository.readDoctorCategories()
+            doctorSpecialities = repository.readDoctorSpecialities()
+
         } catch (error: ClientRequestException) {
             printErrorMessage(error)
+            errorMessage = error.message
         } catch (error: ServerResponseException) {
             printErrorMessage(error)
         } catch (error: NetworkErrorException) {
@@ -57,6 +61,10 @@ class DoctorsViewModel(private val repository: IRepository = Repository()) {
         }  finally {
             _uiState.update {
                 it.copy(
+                    doctors = doctors,
+                    doctorCategories = doctorCategories,
+                    doctorSpecialities = doctorSpecialities,
+                    errorMessage = errorMessage,
                     fetchData = false,
                 )
             }
