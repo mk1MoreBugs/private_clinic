@@ -36,4 +36,6 @@ interface IRepository {
     suspend fun readDoctorCategories(): List<BaseItem>
 
     suspend fun readDoctorSpecialities(): List<BaseItem>
+
+    suspend fun getToken(username: String, password: String)
 }
