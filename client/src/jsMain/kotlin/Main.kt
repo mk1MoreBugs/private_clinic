@@ -27,7 +27,7 @@ class App : Application() {
 
         root("kvapp") {
 
-            navbar("Private Clinic") {
+            navbar("Private Clinic").bind(appState) {
                 nav {
                     navLink(
                         label = "Patients",
@@ -41,21 +41,17 @@ class App : Application() {
                         icon = "bi bi-clipboard2-pulse-fill",
                         )
 
-
-                }
-                nav {
-                if (appState.value.userId == null) {
-                    navLink(
-                        label = "Login",
-                        url = "#/login",
-                    )
-                } else {
-                    navLink(
-                        label = "user ID: ${appState.value.userId}",
-                    )
-                }
-
-
+                    if (appState.value.userId == null) {
+                        navLink(
+                            label = "Login",
+                            url = "#/login",
+                        )
+                    } else {
+                        navLink(
+                            label = "user ID: ${appState.value.userId}",
+                             url = "#/user-id/${appState.value.userId}",
+                        )
+                    }
                 }
             }
 

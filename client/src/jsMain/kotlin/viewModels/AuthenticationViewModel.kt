@@ -39,7 +39,6 @@ class AuthenticationViewModel(private val repository: IRepository = Repository()
                     userId = uiState.value.userId?.toInt()
                 )
             }
-            updateErrorMessage(error=null)
         } catch (error: ClientRequestException) {
             updateErrorMessage(error)
         } catch (error: NetworkErrorException) {

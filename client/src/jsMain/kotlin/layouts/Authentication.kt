@@ -14,6 +14,8 @@ import io.kvision.toast.ToastContainer
 import io.kvision.toast.ToastContainerPosition
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
+import mk1morebugs.appState
+import mk1morebugs.router
 import mk1morebugs.viewModels.AuthenticationData
 import mk1morebugs.viewModels.AuthenticationViewModel
 
@@ -49,7 +51,7 @@ fun Modal.login() {
             required = true,
             requiredMessage = requiredMessage,
         ) {
-        (it.getValue()?.length ?: 0) >= 8
+        (it.getValue()?.length ?: 0) >= 5
         }
 
     }
@@ -59,7 +61,9 @@ fun Modal.login() {
     )
     this.addButton(Button("Войти") {
         onClickLaunch {
-            if (formPanel.validate()) {
+            val isValid = formPanel.validate()
+            viewModel.updateErrorMessage(error=null)
+            if (isValid) {
                 try {
                     viewModel.updateUiState(
                         username = formPanel.getData().userId
@@ -72,6 +76,8 @@ fun Modal.login() {
                 } catch (error: IllegalArgumentException) {
                     viewModel.updateErrorMessage(error)
                 }
+
+
             }
             if (uiState.value.errorMessage != null) {
                 ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
@@ -79,6 +85,9 @@ fun Modal.login() {
                     bgColor = BsBgColor.DANGER,
                     color = BsColor.DANGERBG,
                 )
+            } else {
+                this@login.hide()
+                router.navigateToPath("/user-id/${appState.value.userId}")
             }
         }
     }
