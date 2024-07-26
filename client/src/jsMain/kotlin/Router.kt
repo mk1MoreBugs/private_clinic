@@ -14,6 +14,7 @@ enum class Views {
     VISITS,
     VISIT,
     NOT_FOUND,
+    AUTHENTICATION,
 }
 
 
@@ -81,7 +82,16 @@ class Router(root: String) {
                 )
             }
             console.log("stateVisitsId: ", appState.value.visitId)
-        }).on(RegExp("^(/*)+"), {
+        }).on(
+            path = "/login/",
+            {
+                console.log("route: /login")
+                appState.update {
+                    it.copy(
+                        views = Views.AUTHENTICATION,
+                    )
+                }
+            }).on(RegExp("^(/*)+"), {
             appState.update {
                 it.copy(
                     patientId = null,
