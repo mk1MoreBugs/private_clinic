@@ -126,7 +126,7 @@ class RequestResponse {
         password: String,
     ) {
         val token: JWTToken = client.submitForm (
-            url = Routers.HOST.url.plus("/authorization/token"),
+            url = "http://".plus(Routers.HOST.url).plus("/authorization/token"),
             formParameters = parameters {
                 append("username", username)
                 append("password", password)
