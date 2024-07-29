@@ -14,13 +14,16 @@ import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.request.forms.*
 
 
-class RequestResponse {
-    private val bearerTokenStorage: MutableList<BearerTokens> = mutableListOf(
-        BearerTokens(
-            accessToken="",
-            refreshToken = "",
-        )
+val bearerTokenStorage: MutableList<BearerTokens> = mutableListOf(
+    BearerTokens(
+        accessToken="",
+        refreshToken = "",
     )
+)
+
+
+class RequestResponse {
+
 
     private val client = HttpClient {
         install(ContentNegotiation) {
@@ -30,6 +33,9 @@ class RequestResponse {
         install(Auth) {
             bearer {
                 loadTokens {
+                    bearerTokenStorage.last()
+                }
+                refreshTokens {
                     bearerTokenStorage.last()
                 }
                 sendWithoutRequest { request ->
@@ -124,7 +130,7 @@ class RequestResponse {
     suspend fun getToken(
         username: String,
         password: String,
-    ) {
+    ): JWTToken {
         val token: JWTToken = client.submitForm (
             url = "http://".plus(Routers.HOST.url).plus("/authorization/token"),
             formParameters = parameters {
@@ -133,5 +139,7 @@ class RequestResponse {
             }
         ).body()
         bearerTokenStorage.add(BearerTokens(accessToken = token.accessToken, refreshToken = ""))
+
+        return token
     }
 }
