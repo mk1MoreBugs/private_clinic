@@ -37,5 +37,5 @@ interface IRepository {
 
     suspend fun readDoctorSpecialities(): List<BaseItem>
 
-    suspend fun getToken(username: String, password: String)
+    suspend fun getToken(username: String, password: String): JWTToken
 }

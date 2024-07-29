@@ -12,6 +12,7 @@ data class AppState(
     val sessionId: Int? = null,
     val visitId: Int? = null,
     val userId: Int? = null,
+    val userRoles: String = "",
 )
 
 val appState = MutableStateFlow(AppState())

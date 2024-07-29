@@ -33,10 +33,11 @@ class AuthenticationViewModel(private val repository: IRepository = Repository()
 
     suspend fun sendPasswordAndGetToken() {
         try {
-            repository.getToken(username = uiState.value.userId!!, password = uiState.value.password!!)
+            val token = repository.getToken(username = uiState.value.userId!!, password = uiState.value.password!!)
             appState.update {
                 it.copy(
-                    userId = uiState.value.userId?.toInt()
+                    userId = uiState.value.userId?.toInt(),
+                    userRoles = token.roles
                 )
             }
         } catch (error: ClientRequestException) {
