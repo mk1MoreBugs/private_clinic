@@ -29,7 +29,11 @@ python -m venv ./backend/venv
 ```
 python -m pip install -r ./backend/requirements.txt
 ```
-4. Run uvicorn server
+4. Create secret key for encode and decode JWT token
+```
+openssl rand -hex 32 > .backend/app/security/secret_key.txt
+```
+5. Run uvicorn server
 ```
 python ./backend/run_uvicorn.py
 ```
