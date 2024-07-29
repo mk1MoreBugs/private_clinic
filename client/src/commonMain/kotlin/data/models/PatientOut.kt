@@ -16,4 +16,6 @@ data class PatientOut(
     val birthday: String,
     @SerialName("category_id")
     val categoryId: Int? = null,
+    @SerialName("plain_password")
+    val password: String,
 )

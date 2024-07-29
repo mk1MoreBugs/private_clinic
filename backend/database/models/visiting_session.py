@@ -14,7 +14,7 @@ class VisitingSession(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     patient_id: Mapped[Optional[int]] = mapped_column(
-        ForeignKey("patients.id", onupdate="CASCADE", ondelete="SET NULL")
+        ForeignKey("patients.user_id", onupdate="CASCADE", ondelete="SET NULL")
     )
 
     patient: Mapped["Patient"] = relationship(back_populates="visiting_sessions")

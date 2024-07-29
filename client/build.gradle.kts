@@ -41,7 +41,7 @@ kotlin {
             implementation(libs.kvision.state)
             implementation(libs.kvision.state.flow)
 
-            implementation(npm("css-loader", "6.10.0"))
+            implementation(npm("css-loader", "7.1.2"))
 
             implementation(libs.ktor.client.js)
         }
@@ -56,6 +56,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.ktor.serialization.kotlinx.json)
             implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.auth)
         }
 
         commonTest.dependencies {

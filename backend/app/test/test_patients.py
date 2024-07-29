@@ -14,7 +14,8 @@ def patients():
             "first_name": "Иван1",
             "middle_name": "Иванович1",
             "birthday": "1999-12-04",
-            "category_id": 1
+            "category_id": 1,
+            "hashed_password": "",
         },
         {
             "last_name": "Иванов2",
@@ -22,6 +23,7 @@ def patients():
             "middle_name": "Иванович2",
             "birthday": "1995-12-10",
             "category_id": None,
+            "hashed_password": "",
         },
     ]
 

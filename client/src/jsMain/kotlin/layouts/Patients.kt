@@ -7,9 +7,11 @@ import io.ktor.client.plugins.*
 import io.kvision.core.*
 import io.kvision.form.formPanel
 import io.kvision.form.select.Select
+import io.kvision.form.text.Password
 import io.kvision.form.text.Text
 import io.kvision.form.time.DateTime
 import io.kvision.html.*
+import io.kvision.i18n.I18n
 import io.kvision.modal.Modal
 import io.kvision.panel.SimplePanel
 import io.kvision.panel.VPanel
@@ -23,6 +25,7 @@ import io.kvision.utils.pt
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import mk1morebugs.appState
 import mk1morebugs.router
 import mk1morebugs.viewModels.PatientsData
 import mk1morebugs.viewModels.PatientsViewModel
@@ -35,7 +38,9 @@ fun SimplePanel.patients() {
 
     vPanel {
         gridPatients(uiState)
-        createPatient(uiState, viewModel)
+        if ("doctor" in appState.value.userRoles) {
+            createPatient(uiState, viewModel)
+        }
     }
 }
 
@@ -51,7 +56,7 @@ private fun VPanel.gridPatients(uiState: StateFlow<PatientsData>) {
         if (uiState.value.patients.isNotEmpty()) {
             options(1, 1) {
                 div {
-                    span("Фамилия")
+                    span("ID")
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
@@ -59,7 +64,7 @@ private fun VPanel.gridPatients(uiState: StateFlow<PatientsData>) {
             }
             options(2, 1) {
                 div {
-                    span("Имя")
+                    span("Фамилия")
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
@@ -67,7 +72,7 @@ private fun VPanel.gridPatients(uiState: StateFlow<PatientsData>) {
             }
             options(3, 1) {
                 div {
-                    span("Отчество")
+                    span("Имя")
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
@@ -75,13 +80,21 @@ private fun VPanel.gridPatients(uiState: StateFlow<PatientsData>) {
             }
             options(4, 1) {
                 div {
-                    span("Дата рождения")
+                    span("Отчество")
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
                 }
             }
             options(5, 1) {
+                div {
+                    span("Дата рождения")
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
+                }
+            }
+            options(6, 1) {
                 div {
                     span("Категория пациента")
                     marginBottom = 10.pt
@@ -93,21 +106,24 @@ private fun VPanel.gridPatients(uiState: StateFlow<PatientsData>) {
 
         for ((index: Int, item: PatientIn) in uiState.value.patients.withIndex()) {
             options(1, index + 2) {
-                span(item.lastName)
+                span(item.patientId.toString())
             }
             options(2, index + 2) {
-                span(item.firstName)
+                span(item.lastName)
             }
             options(3, index + 2) {
-                span(item.middleName)
+                span(item.firstName)
             }
             options(4, index + 2) {
-                span(item.birthday)
+                span(item.middleName)
             }
             options(5, index + 2) {
-                span(item.categoryName ?: "Нет категории")
+                span(item.birthday)
             }
             options(6, index + 2) {
+                span(item.categoryName ?: "Нет категории")
+            }
+            options(7, index + 2) {
                 div {
                     button(
                         text = "Посмотреть сессии обращений",
@@ -130,6 +146,7 @@ private fun VPanel.createPatient(uiState: StateFlow<PatientsData>, viewModel: Pa
         val middleName: String? = null,
         @Contextual val birthday: Date? = null,
         val categoryId: String? = null,
+        val password: String? = null,
     )
 
     val requiredMessage = "Поле обязательно!"
@@ -189,6 +206,17 @@ private fun VPanel.createPatient(uiState: StateFlow<PatientsData>, viewModel: Pa
                 ),
                 required = false,
             )
+            add(
+                PatientForm::password,
+                Password(
+                    label = I18n.tr("Пароль:"),
+                ),
+                validatorMessage = { I18n.tr("Password is short") },
+                required = true,
+                requiredMessage = requiredMessage,
+            ) {
+                (it.getValue()?.length ?: 0) >= 8
+            }
         }
 
         modal.add(
@@ -199,40 +227,45 @@ private fun VPanel.createPatient(uiState: StateFlow<PatientsData>, viewModel: Pa
             onClickLaunch {
                 console.log("adding...")
 
-                formPanel.validate()
-                try {
-                    if (formPanel.getData().birthday == null) {
-                        throw IllegalArgumentException("поле \"Дата рождения\" обязательно")
-                    }
-                    val dateString: String = formPanel.getData().birthday!!.toISOString().slice(IntRange(0, 9))
+                val isValid = formPanel.validate()
+                if (isValid) {
+                    try {
+                        if (formPanel.getData().birthday == null) {
+                            throw IllegalArgumentException("поле \"Дата рождения\" обязательно")
+                        }
+                        val dateString: String = formPanel.getData().birthday!!.toISOString().slice(IntRange(0, 9))
 
-                    viewModel.createPatient(
-                        patient = PatientOut(
-                            lastName = formPanel.getData().lastName
-                                ?: throw IllegalArgumentException("поле \"Фамилия\" обязательно"),
+                        viewModel.createPatient(
+                            patient = PatientOut(
+                                lastName = formPanel.getData().lastName
+                                    ?: throw IllegalArgumentException("поле \"Фамилия\" обязательно"),
 
-                            firstName = formPanel.getData().firstName
-                                ?: throw IllegalArgumentException("поле \"Имя\" обязательно"),
+                                firstName = formPanel.getData().firstName
+                                    ?: throw IllegalArgumentException("поле \"Имя\" обязательно"),
 
-                            middleName = formPanel.getData().middleName,
-                            birthday = dateString,
-                            categoryId = formPanel.getData().categoryId?.toInt(),
+                                middleName = formPanel.getData().middleName,
+                                birthday = dateString,
+                                categoryId = formPanel.getData().categoryId?.toInt(),
+                                password = formPanel.getData().password
+                                    ?: throw IllegalArgumentException("поле \"Пароль\" обязательно"),
+                            )
                         )
-                    )
-                    modal.hide()
+                        modal.hide()
 
-                } catch (e: IllegalArgumentException) {
-                    ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
-                        message = "Не удалось создать пациента, ${e.message}",
-                        bgColor = BsBgColor.DANGER,
-                        color = BsColor.DANGERBG,
-                    )
-                } catch (e: ResponseException) {
-                    ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
-                        message = "Не удалось создать пациента, ${e.message}",
-                        color = BsColor.DANGER,
-                    )
+                    } catch (e: IllegalArgumentException) {
+                        ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
+                            message = "Не удалось создать пациента, ${e.message}",
+                            bgColor = BsBgColor.DANGER,
+                            color = BsColor.DANGERBG,
+                        )
+                    } catch (e: ResponseException) {
+                        ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
+                            message = "Не удалось создать пациента, ${e.message}",
+                            color = BsColor.DANGER,
+                        )
+                    }
                 }
+
             }
         })
 

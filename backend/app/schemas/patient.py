@@ -1,13 +1,17 @@
 from datetime import date
 
-from app.schemas.full_name import FullName
+from app.schemas.user import FullName
 
 
-class PatientIn(FullName):
+class PatientBase(FullName):
     birthday: date
     category_id: int | None
 
 
-class PatientOut(PatientIn):
+class PatientIn(PatientBase):
+    plain_password: str
+
+
+class PatientOut(PatientBase):
     patient_id: int
     category_name: str | None

@@ -1,3 +1,7 @@
+### secret key ###
+backend/app/security/secret_key.txt
+
+
 ### SQLite ###
 **/*.sqbpro
 
