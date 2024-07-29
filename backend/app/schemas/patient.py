@@ -9,7 +9,7 @@ class PatientBase(FullName):
 
 
 class PatientIn(PatientBase):
-    hashed_password: str
+    plain_password: str
 
 
 class PatientOut(PatientBase):

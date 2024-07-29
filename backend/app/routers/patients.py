@@ -6,6 +6,7 @@ from app.schemas.patient import PatientIn, PatientOut
 from app.schemas.user import User
 from app.schemas.visiting_session import VisitingSessionOut
 from app.security.access_token import get_token_data
+from app.security.password import get_password_hash
 from database.crud import patients
 from database.crud import visiting_sessions
 
@@ -51,7 +52,17 @@ async def create_patient(
         patient: PatientIn,
         session: SessionDep,
 ):
-    patients.create_patient(session=session, **dict(patient))
+    hashed_password = get_password_hash(patient.plain_password)
+
+    patients.create_patient(
+        session=session,
+        last_name=patient.last_name,
+        first_name=patient.first_name,
+        middle_name=patient.middle_name,
+        birthday=patient.birthday,
+        category_id=patient.category_id,
+        hashed_password=hashed_password,
+    )
 
 
 def __verify_patient(user: User):

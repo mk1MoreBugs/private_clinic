@@ -5,6 +5,7 @@ from app.schemas.doctor import DoctorIn, DoctorOut
 from app.schemas.user import User
 from app.schemas.visit import VisitSelectForDoctor
 from app.security.access_token import get_token_data
+from app.security.password import get_password_hash
 from database.crud import doctors
 from database.crud import visits
 
@@ -49,7 +50,20 @@ async def create_doctor(
 ):
     user = get_token_data(token)
     if verify_doctor(user):
-        doctors.create_doctor(session, **dict(doctor))
+        hashed_password = get_password_hash(doctor.plain_password)
+
+        doctors.create_doctor(
+            session,
+            last_name=doctor.last_name,
+            first_name=doctor.first_name,
+            middle_name=doctor.middle_name,
+            hashed_password=hashed_password,
+            experience=doctor.experience,
+            speciality_id=doctor.speciality_id,
+            category_id=doctor.category_id,
+
+
+        )
 
 
 def verify_doctor(user: User):

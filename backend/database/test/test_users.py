@@ -22,7 +22,7 @@ def test_create_and_read_users(
         assert result[index].last_name == item["last_name"]
         assert result[index].first_name == item["first_name"]
         assert result[index].middle_name == item["middle_name"]
-        assert result[index].hashed_password == item["hashed_password"]
+        assert result[index].plain_password == item["hashed_password"]
 
 
 def test_create_user_and_read_hashed_password(db_session, users):
