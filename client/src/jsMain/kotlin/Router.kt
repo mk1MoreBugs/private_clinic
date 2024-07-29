@@ -14,6 +14,7 @@ enum class Views {
     VISITS,
     VISIT,
     NOT_FOUND,
+    AUTHENTICATION,
 }
 
 
@@ -47,11 +48,17 @@ class Router(root: String) {
             console.log("stateDoctorId", appState.value.doctorId)
         }).on(Routers.PATIENTS.url, {
             console.log("route: /patients")
-            appState.update {
-                it.copy(
-                    views = Views.PATIENTS
-                )
+            if ("doctor" in appState.value.userRoles || appState.value.userRoles == "") {
+                appState.update {
+                    it.copy(
+                        views = Views.PATIENTS
+                    )
+                }
+            } else {
+                println(appState.value.userRoles)
+                router.navigate(Routers.PATIENTS.url.plus(appState.value.userId))
             }
+
         }).on(getStringRegExp(Routers.PATIENTS.url), { match ->
             appState.update {
                 it.copy(
@@ -81,7 +88,16 @@ class Router(root: String) {
                 )
             }
             console.log("stateVisitsId: ", appState.value.visitId)
-        }).on(RegExp("^(/*)+"), {
+        }).on(
+            path = "/login/",
+            {
+                console.log("route: /login")
+                appState.update {
+                    it.copy(
+                        views = Views.AUTHENTICATION,
+                    )
+                }
+            }).on(RegExp("^(/*)+"), {
             appState.update {
                 it.copy(
                     patientId = null,

@@ -19,7 +19,7 @@ class Visit(Base):
     )
 
     doctor_id: Mapped[int] = mapped_column(
-        ForeignKey("doctors.id", onupdate="CASCADE", ondelete="SET NULL")
+        ForeignKey("doctors.user_id", onupdate="CASCADE", ondelete="SET NULL")
     )
     service_id: Mapped[int] = mapped_column(
         ForeignKey("services.id", onupdate="CASCADE", ondelete="RESTRICT")

@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from pydantic import Field
-from app.schemas.full_name import FullName
+from app.schemas.user import FullName
 
 
 class BaseDoctor(FullName):
@@ -9,6 +9,7 @@ class BaseDoctor(FullName):
 
 
 class DoctorIn(BaseDoctor):
+    plain_password: str
     speciality_id: int
     category_id: int
 

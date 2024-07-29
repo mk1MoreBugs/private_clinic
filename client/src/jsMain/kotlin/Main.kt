@@ -3,6 +3,7 @@ package mk1morebugs
 import io.kvision.*
 import io.kvision.html.div
 import io.kvision.html.span
+import io.kvision.modal.Modal
 import io.kvision.navbar.nav
 import io.kvision.navbar.navLink
 import io.kvision.navbar.navbar
@@ -26,7 +27,7 @@ class App : Application() {
 
         root("kvapp") {
 
-            navbar("Private Clinic") {
+            navbar("Private Clinic").bind(appState) {
                 nav {
                     navLink(
                         label = "Patients",
@@ -39,6 +40,18 @@ class App : Application() {
                         url = "#/doctors",
                         icon = "bi bi-clipboard2-pulse-fill",
                         )
+
+                    if (appState.value.userId == null) {
+                        navLink(
+                            label = "Login",
+                            url = "#/login",
+                        )
+                    } else {
+                        navLink(
+                            label = "user ID: ${appState.value.userId}",
+                             url = "#/user-id/${appState.value.userId}",
+                        )
+                    }
                 }
             }
 
@@ -53,6 +66,7 @@ class App : Application() {
                     Views.SESSION -> sessions()
                     Views.VISITS -> patientVisits()
                     Views.VISIT -> visit()
+                    Views.AUTHENTICATION -> Modal(caption = "Login").login()
                     Views.NOT_FOUND -> {
                         span("Страница не найдена!")
                     }

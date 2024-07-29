@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends, Path, Query, Body, status
 
 from app.dependencies import session_db
-from app.routers import visits
 from app.schemas.visit import VisitSelectForPatient
 from database.crud import visiting_sessions
 from database.crud import visits
@@ -20,7 +19,7 @@ async def read_visits(
         detailed: Annotated[bool, Query()] = False,
         session: Session = Depends(session_db),
 ) -> list[VisitSelectForPatient]:
-    list_visits = visits.read_visits(
+    list_visits = visits.read_visits_by_visit_session_id(
         session=session,
         visit_session_id=session_id,
         detailed_information=detailed,

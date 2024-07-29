@@ -1,8 +1,8 @@
 [versions]
-ktor = "2.3.8"
-coroutines = "1.7.3"
-kotlinVersion = "1.9.22"
-kvisionVersion = "7.3.1"
+ktor = "2.3.12"
+coroutines = "1.9.0-RC"
+kotlinVersion = "2.0.0"
+kvisionVersion = "7.5.1"
 
 [libraries]
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
@@ -19,6 +19,7 @@ kvision-bootstrap-icons = { module = "io.kvision:kvision-bootstrap-icons", versi
 kvision-datetime = { module = "io.kvision:kvision-datetime", version.ref = "kvisionVersion" }
 kvision-state = { module = "io.kvision:kvision-state", version.ref = "kvisionVersion" }
 kvision-state-flow = { module = "io.kvision:kvision-state-flow", version.ref = "kvisionVersion" }
+ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 
 
 [plugins]

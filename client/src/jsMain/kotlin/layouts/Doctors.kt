@@ -7,8 +7,10 @@ import io.ktor.client.plugins.*
 import io.kvision.core.*
 import io.kvision.form.formPanel
 import io.kvision.form.select.Select
+import io.kvision.form.text.Password
 import io.kvision.form.text.Text
 import io.kvision.html.*
+import io.kvision.i18n.I18n
 import io.kvision.modal.Modal
 import io.kvision.panel.SimplePanel
 import io.kvision.panel.VPanel
@@ -21,6 +23,7 @@ import io.kvision.utils.perc
 import io.kvision.utils.pt
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.serialization.Serializable
+import mk1morebugs.appState
 import mk1morebugs.router
 import mk1morebugs.viewModels.DoctorsData
 import mk1morebugs.viewModels.DoctorsViewModel
@@ -32,7 +35,9 @@ fun SimplePanel.doctors() {
 
     vPanel {
         gridDoctors(uiState)
-        createDoctor(uiState, viewModel)
+        if ("doctor" in appState.value.userRoles) {
+            createDoctor(uiState, viewModel)
+        }
     }
 }
 
@@ -49,7 +54,7 @@ private fun VPanel.gridDoctors(uiState: StateFlow<DoctorsData>) {
         if (uiState.value.doctors.isNotEmpty()) {
             options(1, 1) {
                 div {
-                    span("Фамилия")
+                    span("ID")
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
@@ -57,7 +62,7 @@ private fun VPanel.gridDoctors(uiState: StateFlow<DoctorsData>) {
             }
             options(2, 1) {
                 div {
-                    span("Имя")
+                    span("Фамилия")
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
@@ -65,7 +70,7 @@ private fun VPanel.gridDoctors(uiState: StateFlow<DoctorsData>) {
             }
             options(3, 1) {
                 div {
-                    span("Отчество")
+                    span("Имя")
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
@@ -73,7 +78,7 @@ private fun VPanel.gridDoctors(uiState: StateFlow<DoctorsData>) {
             }
             options(4, 1) {
                 div {
-                    span("Специальность")
+                    span("Отчество")
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
@@ -81,13 +86,21 @@ private fun VPanel.gridDoctors(uiState: StateFlow<DoctorsData>) {
             }
             options(5, 1) {
                 div {
-                    span("Категория")
+                    span("Специальность")
                     marginBottom = 10.pt
                     marginRight = 15.pt
                     marginLeft = 15.pt
                 }
             }
             options(6, 1) {
+                div {
+                    span("Категория")
+                    marginBottom = 10.pt
+                    marginRight = 15.pt
+                    marginLeft = 15.pt
+                }
+            }
+            options(7, 1) {
                 div {
                     span("Уволен")
                     marginBottom = 10.pt
@@ -99,21 +112,24 @@ private fun VPanel.gridDoctors(uiState: StateFlow<DoctorsData>) {
 
         for ((index: Int, item: DoctorIn) in uiState.value.doctors.withIndex()) {
             options(1, index + 2) {
-                span(item.lastName)
+                span(item.doctorId.toString())
             }
             options(2, index + 2) {
-                span(item.firstName)
+                span(item.lastName)
             }
             options(3, index + 2) {
-                span(item.middleName ?: "")
+                span(item.firstName)
             }
             options(4, index + 2) {
-                span(item.specialityName)
+                span(item.middleName ?: "")
             }
             options(5, index + 2) {
-                span(item.categoryName)
+                span(item.specialityName)
             }
             options(6, index + 2) {
+                span(item.categoryName)
+            }
+            options(7, index + 2) {
 
                 span(item.quitClinic.let {
                     if (it) {
@@ -148,7 +164,8 @@ private fun VPanel.createDoctor(uiState: StateFlow<DoctorsData>, viewModel: Doct
         val experience: String? = null,
         val specialityId: String? = null,
         val categoryId: String? = null,
-    )
+        val password: String? = null,
+        )
 
     val requiredMessage = "Поле обязательно!"
 
@@ -203,8 +220,8 @@ private fun VPanel.createDoctor(uiState: StateFlow<DoctorsData>, viewModel: Doct
                 requiredMessage = requiredMessage,
                 validatorMessage = { "Опыт работы должен быть целым числом от 0 до 100" }
             ) {
-                it.getValue()?.let { inputPrice ->
-                    "^\\d..$".toRegex().matches(inputPrice)
+                it.getValue()?.let { inputValue ->
+                    "^\\d{1,2}$".toRegex().matches(inputValue)
                 }
             }
             add(
@@ -225,6 +242,17 @@ private fun VPanel.createDoctor(uiState: StateFlow<DoctorsData>, viewModel: Doct
                 required = true,
                 requiredMessage = requiredMessage,
             )
+            add(
+                DoctorForm::password,
+                Password(
+                    label = I18n.tr("Пароль:"),
+                ),
+                validatorMessage = { I18n.tr("Password is short") },
+                required = true,
+                requiredMessage = requiredMessage,
+            ) {
+                (it.getValue()?.length ?: 0) >= 8
+            }
         }
 
         modal.add(
@@ -235,48 +263,53 @@ private fun VPanel.createDoctor(uiState: StateFlow<DoctorsData>, viewModel: Doct
             onClickLaunch {
                 console.log("adding...")
 
-                formPanel.validate()
-                try {
-                    val experience = formPanel.getData().experience?.toInt()
-                        ?: throw IllegalArgumentException("поле \"Опыт работы\" обязательно")
-                    if (experience < 0 || experience > 100 ) {
-                        throw IllegalArgumentException("Опыт работы должен быть целым числом от 0 до 100")
-                    }
+                val isValid = formPanel.validate()
+                if (isValid) {
+                    try {
+                        val experience = formPanel.getData().experience?.toInt()
+                            ?: throw IllegalArgumentException("поле \"Опыт работы\" обязательно")
+                        if (experience < 0 || experience > 100 ) {
+                            throw IllegalArgumentException("Опыт работы должен быть целым числом от 0 до 100")
+                        }
 
-                    viewModel.createDoctor(
-                        doctor = DoctorOut(
-                            lastName = formPanel.getData().lastName
-                                ?: throw IllegalArgumentException("поле \"Фамилия\" обязательно"),
+                        viewModel.createDoctor(
+                            doctor = DoctorOut(
+                                lastName = formPanel.getData().lastName
+                                    ?: throw IllegalArgumentException("поле \"Фамилия\" обязательно"),
 
-                            firstName = formPanel.getData().firstName
-                                ?: throw IllegalArgumentException("поле \"Имя\" обязательно"),
+                                firstName = formPanel.getData().firstName
+                                    ?: throw IllegalArgumentException("поле \"Имя\" обязательно"),
 
-                            middleName = formPanel.getData().middleName,
+                                middleName = formPanel.getData().middleName,
 
-                            experience = formPanel.getData().experience?.toInt()
-                                ?: throw IllegalArgumentException("поле \"Опыт работы\" обязательно"),
+                                experience = formPanel.getData().experience?.toInt()
+                                    ?: throw IllegalArgumentException("поле \"Опыт работы\" обязательно"),
 
-                            specialityId = formPanel.getData().specialityId?.toInt()
-                                ?: throw IllegalArgumentException("поле \"Категория\" обязательно"),
+                                specialityId = formPanel.getData().specialityId?.toInt()
+                                    ?: throw IllegalArgumentException("поле \"Категория\" обязательно"),
 
-                            categoryId = formPanel.getData().categoryId?.toInt()
-                                ?: throw IllegalArgumentException("поле \"Специальность\" обязательно"),
+                                categoryId = formPanel.getData().categoryId?.toInt()
+                                    ?: throw IllegalArgumentException("поле \"Специальность\" обязательно"),
+                                password = formPanel.getData().password
+                                    ?: throw IllegalArgumentException("поле \"Пароль\" обязательно"),
+                            )
                         )
-                    )
-                    modal.hide()
+                        modal.hide()
 
-                } catch (e: IllegalArgumentException) {
-                    ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
-                        message = "Не удалось создать доктора, ${e.message}",
-                        bgColor = BsBgColor.DANGER,
-                        color = BsColor.DANGERBG,
-                    )
-                } catch (e: ResponseException) {
-                    ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
-                        message = "Не удалось создать доктора, ${e.message}",
-                        color = BsColor.DANGER,
-                    )
+                    } catch (e: IllegalArgumentException) {
+                        ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
+                            message = "Не удалось создать доктора, ${e.message}",
+                            bgColor = BsBgColor.DANGER,
+                            color = BsColor.DANGERBG,
+                        )
+                    } catch (e: ResponseException) {
+                        ToastContainer(ToastContainerPosition.TOPCENTER).showToast(
+                            message = "Не удалось создать доктора, ${e.message}",
+                            color = BsColor.DANGER,
+                        )
+                    }
                 }
+
             }
         })
 

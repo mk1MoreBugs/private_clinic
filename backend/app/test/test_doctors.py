@@ -16,6 +16,7 @@ def doctors():
             "experience": 10,
             "speciality_id": 1,
             "category_id": 1,
+            "hashed_password": "",
         },
         {
             "last_name": "Фамилия2",
@@ -24,6 +25,7 @@ def doctors():
             "experience": 5,
             "speciality_id": 2,
             "category_id": 2,
+            "hashed_password": "",
         },
         {
             "last_name": "Фамилия2",
@@ -32,6 +34,7 @@ def doctors():
             "experience": 15,
             "speciality_id": 3,
             "category_id": 3,
+            "hashed_password": "",
         },
     ]
 

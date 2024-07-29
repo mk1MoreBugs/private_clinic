@@ -95,4 +95,8 @@ class Repository : IRepository {
     override suspend fun readDoctorSpecialities(): List<BaseItem> = request.getRequest(
         url = Routers.DOCTOR_SPECIALITIES.url
     ).body()
+
+    override suspend fun getToken(username: String, password: String): JWTToken {
+        return request.getToken(username=username, password = password)
+    }
 }

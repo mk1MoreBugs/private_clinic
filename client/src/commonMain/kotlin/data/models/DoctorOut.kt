@@ -17,4 +17,6 @@ data class DoctorOut(
     val specialityId: Int,
     @SerialName("category_id")
     val categoryId: Int,
+    @SerialName("plain_password")
+    val password: String,
 )
