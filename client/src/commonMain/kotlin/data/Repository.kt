@@ -1,12 +1,12 @@
 package data
 
-import data.ktorClient.RequestResponse
+import data.ktorClient.NetworkManager
 import data.models.*
 import io.ktor.client.call.*
 import data.ktorClient.Routers
 
 class Repository : IRepository {
-    private val request = RequestResponse()
+    private val request = NetworkManager()
     override suspend fun readVisitByVisitId(visitId: Int): List<VisitDetailed> = request.getRequest(
         url = Routers.VISITS.url.plus(visitId)
     ).body()

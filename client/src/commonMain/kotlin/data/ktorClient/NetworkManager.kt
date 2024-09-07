@@ -22,7 +22,7 @@ val bearerTokenStorage: MutableList<BearerTokens> = mutableListOf(
 )
 
 
-class RequestResponse {
+class NetworkManager {
 
 
     private val client = HttpClient {
