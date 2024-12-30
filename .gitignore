@@ -1,5 +1,6 @@
-### secret key ###
+### secret keys ###
 backend/app/security/secret_key.txt
+db_password.txt
 
 
 ### SQLite ###
