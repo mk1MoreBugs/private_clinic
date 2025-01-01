@@ -2,6 +2,7 @@ services:
   backend:
     build:
       context: ./backend
+      dockerfile: Dockerfile.backend
     ports:
       - "8080:8080"
     restart: always
@@ -20,7 +21,9 @@ services:
       - postgres_password
 
   db:
-    image: postgres
+    build: 
+      context: ./backend 
+      dockerfile: Dockerfile.db
     restart: always
     shm_size: 128mb
     volumes:
