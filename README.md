@@ -18,7 +18,9 @@ Admin panel for managing a private clinic and tracking financial indicators. Thi
 ## Run project
 0. Install docker and docker compose
 
-1. Run:
+2. Create file `db_password.txt` with password from postgresql db in root dir
+
+3. Run:
 ```
 docker compose up
 ```
