@@ -1,3 +1,4 @@
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -5,6 +6,7 @@ from sqlalchemy import pool
 
 from alembic import context
 
+from database.create_database_url import create_database_url
 from database.database import get_metadata
 
 # this is the Alembic Config object, which provides
@@ -26,6 +28,15 @@ target_metadata = get_metadata()
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+sqlalchemy_url = create_database_url(
+    db_host="localhost",
+    db_port="5432",
+    db_user="postgres",
+    db_name="private_clinic_db",
+    password_file_path="../../db_password.txt",
+)
+config.set_main_option("sqlalchemy.url", sqlalchemy_url)
 
 
 def run_migrations_offline() -> None:
