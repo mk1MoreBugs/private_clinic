@@ -16,7 +16,6 @@ Admin panel for managing a private clinic and tracking financial indicators.
 
 
 ## Run project
-```
 0. Install docker and docker compose
 1. Run:
 ```
