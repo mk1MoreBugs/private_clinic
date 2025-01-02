@@ -35,6 +35,8 @@ services:
       - postgres.env
     secrets:
       - postgres_password
+    ports:
+      - "5432:5432"
 
   frontend:
     depends_on:
