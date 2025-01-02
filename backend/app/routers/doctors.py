@@ -1,8 +1,8 @@
 from fastapi import APIRouter, status
 
 from app.dependencies import SessionDep, TokenDep
-from app.schemas.doctor import DoctorIn, DoctorOut
-from app.schemas.user import User
+from app.schemas.doctor import DoctorIn, DoctorOut, DoctorOutShort
+from app.schemas.user import User, FullName
 from app.schemas.visit import VisitSelectForDoctor
 from app.security.access_token import get_token_data
 from app.security.password import get_password_hash
@@ -16,11 +16,16 @@ router = APIRouter(
 
 
 @router.get("/")
-async def read_doctors(session: SessionDep, token: TokenDep) -> list[DoctorOut | None]:
+async def read_doctors(session: SessionDep, token: TokenDep) -> list[DoctorOut | DoctorOutShort | None]:
     user = get_token_data(token)
-    if verify_doctor(user):
+    if user is not None:
         list_doctors: list[DoctorOut] = doctors.read_doctors(session)
-        return list_doctors
+        if "doctor" in user.roles:
+            return list_doctors
+        elif "patient" in user.roles:
+            return list(map(lambda item: DoctorOutShort(**dict(item)), list_doctors))
+        else:
+            return []
     else:
         return []
 

@@ -22,11 +22,15 @@ async def read_patients(
         token: TokenDep,
 ) -> list[PatientOut | None]:
     user = get_token_data(token)
-    if verify_doctor(user):
+    if "doctor" in user.roles:
         list_patients: list[PatientOut] = patients.read_patients(session)
         return list_patients
+    elif "patient" in user.roles:
+        return patients.read_patient_by_id(
+            session=session,
+            user_id=user.user_id,
+        )
     else:
-        print("Access is denied!")
         return []
 
 
