@@ -24,7 +24,7 @@ app.include_router(authorization.router)
 origins = [
     "http://localhost",
     "http://localhost:8000",
-    "https://localhost:8000",
+    "http://127.0.0.1:8000",
 ]
 
 app.add_middleware(
