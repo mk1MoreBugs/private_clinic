@@ -11,12 +11,13 @@ httpx
 # SQLAlchemy
 SQLAlchemy
 alembic
+psycopg[binary,pool]
 
 # ODM (Object Document Mapper) for MongoDB
 #odmantic
 
 # PyJWT, PassLib
 PyJWT
-passlib[bcrypt]
+bcrypt
 
 mypy

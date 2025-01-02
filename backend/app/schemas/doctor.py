@@ -19,3 +19,9 @@ class DoctorOut(BaseDoctor):
     doctor_id: int | None
     speciality_name: str | None
     category_name: str | None
+
+
+class DoctorOutShort(BaseDoctor):
+    doctor_id: int | None
+    speciality_name: str | None
+    category_name: str | None
