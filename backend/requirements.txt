@@ -18,6 +18,6 @@ psycopg[binary,pool]
 
 # PyJWT, PassLib
 PyJWT
-passlib[bcrypt]
+bcrypt
 
 mypy
