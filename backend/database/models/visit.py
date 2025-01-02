@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from typing import Optional
 
 from sqlalchemy.orm import Mapped
@@ -27,7 +27,7 @@ class Visit(Base):
     diagnosis_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey("diagnoses.id", onupdate="CASCADE", ondelete="RESTRICT")
     )
-    appointment_datetime: Mapped[datetime]
+    appointment_datetime: Mapped[date]
     discounted_price: Mapped[int]
     anamnesis: Mapped[Optional[str]]
     opinion: Mapped[Optional[str]]
